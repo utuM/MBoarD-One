@@ -14,11 +14,13 @@ namespace Driver {
 		private:
 			char m_description[16];
 			uint32_t m_id;
-			T m_interface;
 			DeviceError m_error;
 		
 		public:
+            T m_interface;
+
 			Device(void) : m_error(DeviceNoError) { }
+            Device(uint8_t address) : m_interface(address), m_error(DeviceNoError) { }
 			~Device(void) { }
 			
 			void setError(DeviceError error) { m_error = error; }
