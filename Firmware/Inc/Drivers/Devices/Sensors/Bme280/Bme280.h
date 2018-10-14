@@ -25,6 +25,8 @@
 #define BME280_DEVICE_RESET     0xB6
 
 namespace Driver {
+    const uint8_t s_kBme280Address = 0xEC;
+
     enum Bme280Registers {
         // Sensor writing and reading registers when connection is on VDD.
         BME280_VDD_WRITE 	       = 0xEE,

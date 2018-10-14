@@ -1,7 +1,5 @@
 #include "Bme280.h"
 
-const uint8_t s_bme280Address = 0xEC;
-
 Driver::Bme280ErrorCodes Driver::Bme280::_init(Bme280Patterns pattern)
 {
     // Initialized array by input device work pattern.
@@ -90,9 +88,7 @@ Driver::Bme280ErrorCodes Driver::Bme280::_turnPower(bool isPowerOn)
 }
 
 Driver::Bme280ErrorCodes Driver::Bme280::_readCompensationData(void)
-{
-    Driver::Bme280ErrorCodes l_status;
-    
+{    
     // Read temperature compensation registers first.
     memset(&m_buffer[0], 0x00, TEMPR_COMPENS_SIZE * 2);
     if (m_interface.recvData(BME280_COMPENS_T1, &m_buffer[0], 
@@ -146,7 +142,6 @@ void Driver::Bme280::_getTemperature(bool isKelvin)
     m_temperCode = (int)m_buffer[0] << 12 | (int)m_buffer[1] << 4 |
                                             (int)m_buffer[2] >> 4;
     // Calculater temperature code.
-    int l_code = 0;
     int l_value1, l_value2, l_tValue;
     float l_value = 0;
     
@@ -176,11 +171,9 @@ void Driver::Bme280::_getPressure(bool isMmhg)
     m_pressureCode = (int)m_buffer[0] << 12 | (int)m_buffer[1] << 4 |
                                               (int)m_buffer[2] >> 4;
     // Calculate pressure code.
-    int l_code = 0;
     int64_t l_value1 = 0,
             l_value2 = 0,
             l_result = 0;
-    float l_value = 0;
     
     l_value1 = (int64_t)m_tCompensCode - 128000;
     l_value2 = l_value1 * l_value1 * (int64_t)m_pressureCompensData[5];
@@ -239,7 +232,7 @@ void Driver::Bme280::_getHumidity(void)
     m_humidity = ((uint32_t)l_value >> 12) / 1024.0;
 }
 
-Driver::Bme280::Bme280(void) : Device(s_bme280Address)
+Driver::Bme280::Bme280(void) : Device(s_kBme280Address)
 {
     m_pressure = m_temperature = m_humidity = 0.0;
     m_tCompensCode = 0;
@@ -248,7 +241,7 @@ Driver::Bme280::Bme280(void) : Device(s_bme280Address)
     _init(BME280_PATTERN_INDOOR);
 }
 
-Driver::Bme280::Bme280(Bme280Patterns pattern) : Device(s_bme280Address)
+Driver::Bme280::Bme280(Bme280Patterns pattern) : Device(s_kBme280Address)
 {
     m_pressure = m_temperature = m_humidity = 0.0;
     m_tCompensCode = 0;
