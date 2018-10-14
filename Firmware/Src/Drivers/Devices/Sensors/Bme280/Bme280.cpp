@@ -9,8 +9,8 @@ Driver::Bme280ErrorCodes Driver::Bme280::_init(Bme280Patterns pattern)
     switch (pattern) {
         // "Weather" pattern.
         case BME280_PATTERN_WEATHER: {
-            l_settings[0] = (uint8_t)BME280_FORCED_MODE;
-            l_settings[1] = (uint8_t)BME280_STANDBY_1000MS;
+            l_settings[0] = (uint8_t)BME280_NORMAL_MODE;
+            l_settings[1] = (uint8_t)BME280_STANDBY_62_5MS;
             l_settings[2] = (uint8_t)BME280_PRESS_ORS_1;
             l_settings[3] = (uint8_t)BME280_TEMPR_ORS_1;
             l_settings[4] = (uint8_t)BME280_HUMID_ORS_1;
@@ -18,8 +18,8 @@ Driver::Bme280ErrorCodes Driver::Bme280::_init(Bme280Patterns pattern)
         } break;
         // "Humidity" pattern.
         case BME280_PATTERN_HUMIDITY: {
-            l_settings[0] = (uint8_t)BME280_FORCED_MODE;
-            l_settings[1] = (uint8_t)BME280_STANDBY_1000MS;
+            l_settings[0] = (uint8_t)BME280_NORMAL_MODE;
+            l_settings[1] = (uint8_t)BME280_STANDBY_500MS;
             l_settings[2] = (uint8_t)BME280_PRESS_ORS_SKIPPED;
             l_settings[3] = (uint8_t)BME280_TEMPR_ORS_1;
             l_settings[4] = (uint8_t)BME280_HUMID_ORS_1;
@@ -27,8 +27,8 @@ Driver::Bme280ErrorCodes Driver::Bme280::_init(Bme280Patterns pattern)
         } break;
         // "Indoor" pattern.
         case BME280_PATTERN_INDOOR: {
-            l_settings[0] = (uint8_t)BME280_FORCED_MODE;
-            l_settings[1] = (uint8_t)BME280_STANDBY_125MS;
+            l_settings[0] = (uint8_t)BME280_NORMAL_MODE;
+            l_settings[1] = (uint8_t)BME280_STANDBY_500MS;
             l_settings[2] = (uint8_t)BME280_PRESS_ORS_16;
             l_settings[3] = (uint8_t)BME280_TEMPR_ORS_2;
             l_settings[4] = (uint8_t)BME280_HUMID_ORS_1;
@@ -37,7 +37,7 @@ Driver::Bme280ErrorCodes Driver::Bme280::_init(Bme280Patterns pattern)
         // "Gaming" pattern.
         case BME280_PATTERN_GAMING: {
             l_settings[0] = (uint8_t)BME280_NORMAL_MODE;
-            l_settings[1] = (uint8_t)BME280_STANDBY_500MS;
+            l_settings[1] = (uint8_t)BME280_STANDBY_62_5MS;
             l_settings[2] = (uint8_t)BME280_PRESS_ORS_4;
             l_settings[3] = (uint8_t)BME280_TEMPR_ORS_1;
             l_settings[4] = (uint8_t)BME280_HUMID_ORS_SKIPPED;
@@ -45,29 +45,47 @@ Driver::Bme280ErrorCodes Driver::Bme280::_init(Bme280Patterns pattern)
         } break;
         
         default: {
-            return;
+
         } break;
     }
     
-    // Setting up BME280_CTRL_MEAS register.
+    // Setting up 'BME280_CONFIG' register.
+    _turnPower(false);
+    m_buffer[0] = l_settings[1] | l_settings[5];
+    if (m_interface.sendByte(BME280_CONFIG, m_buffer[0])) {
+        return BME280_ERR_CONFIG_DATA;
+    }
+    _turnPower(true);
+    // Setting up 'BME280_CTRL_HUM' register.
+    m_buffer[0] = l_settings[4];
+    if (m_interface.sendByte(BME280_CTRL_HUM, m_buffer[0])) {
+        return BME280_ERR_CTRL_HUM_DATA;
+    }
+    // Setting up 'BME280_CTRL_MEAS' register.
     m_buffer[0] = l_settings[0] | l_settings[2] | l_settings[3];
     m_bufferSize = BME280_BUFFER_SIZE;
     if (m_interface.sendByte(BME280_CTRL_MEAS, m_buffer[0])) {
         return BME280_ERR_CTRL_MEAS_DATA;
     }
-    // Setting up BME280_CTRL_HUM register.
-    m_buffer[0] = l_settings[4];
-    if (m_interface.sendByte(BME280_CTRL_HUM, m_buffer[0])) {
-        return BME280_ERR_CTRL_HUM_DATA;
-    }
-    // Setting up BME280_CONFIG register.
-    m_buffer[0] = l_settings[1] | l_settings[5];
-    if (m_interface.sendByte(BME280_CONFIG, m_buffer[0])) {
-        return BME280_ERR_CONFIG_DATA;
-    }
     // Read componensation data registers.
     _readCompensationData();
     
+    return BME280_NOERROR;
+}
+
+Driver::Bme280ErrorCodes Driver::Bme280::_turnPower(bool isPowerOn)
+{
+    uint8_t l_regValue;
+    // Read 'CTRL_MEAS' register before change.
+    if (m_interface.recvByte(BME280_CTRL_MEAS, &l_regValue)) {
+        return BME280_ERR_READ_DATA;
+    }
+    // Change register work mode bit according to input state.
+    isPowerOn == true ? l_regValue |= 0x03 : l_regValue &= 0xFFFC;
+    if (m_interface.sendByte(BME280_CTRL_MEAS, l_regValue)) {
+        return BME280_ERR_WRITE_DATA;
+    }
+
     return BME280_NOERROR;
 }
 
@@ -226,7 +244,7 @@ Driver::Bme280::Bme280(void) : Device(s_bme280Address)
     m_pressure = m_temperature = m_humidity = 0.0;
     m_tCompensCode = 0;
     
-    m_interface.setHandler((void*)&hi2c2);
+    m_interface.setHandler((void*)&hi2c1);
     _init(BME280_PATTERN_INDOOR);
 }
 
@@ -235,8 +253,13 @@ Driver::Bme280::Bme280(Bme280Patterns pattern) : Device(s_bme280Address)
     m_pressure = m_temperature = m_humidity = 0.0;
     m_tCompensCode = 0;
 
-    m_interface.setHandler((void*)&hi2c2);
+    m_interface.setHandler((void*)&hi2c1);
     _init(pattern);
+}
+
+Driver::Bme280::~Bme280(void)
+{
+
 }
 
 void Driver::Bme280::update(float& temperature, float& pressure, float& humidity)
