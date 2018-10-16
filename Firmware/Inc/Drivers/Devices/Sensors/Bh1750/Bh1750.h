@@ -3,10 +3,11 @@
 
 #include "DriverDevice.h"
 #include "DriverI2c.h"
+#include "gpio.h"
 #include "i2c.h"
 
 namespace Driver {
-    const uint8_t s_kBh1750Address = 0x23;
+    const uint8_t s_kBh1750Address = 0x23 << 1;
 
     enum Bh1750ErrorCodes {
         NoError = 0x00
@@ -20,7 +21,7 @@ namespace Driver {
             Bh1750(void);
             ~Bh1750(void);
 
-            void getLx(float& value);
+            void getLux(float& value);
     };
 }
 
