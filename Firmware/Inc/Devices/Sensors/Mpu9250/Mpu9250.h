@@ -6,8 +6,8 @@
 #include "i2c.h"
 
 namespace Driver {
-    const uint8_t s_kMpu9250Address = 0x68;
-    const uint8_t s_kMpu9250MagnAddress = 0x0C;
+    const uint8_t s_kMpu9250Address = 0x68 << 1;
+    const uint8_t s_kMpu9250MagnAddress = 0x0C << 1;
     /**
      *      Major MPU9250 registers.
      **/
@@ -146,7 +146,8 @@ namespace Driver {
         MPU9250_ZA_OFFSET_L = 0x7E
     };
     /**
-     *      Magnitometer registers.
+     *      Magnitometer registers (to get access to the magnitometer data need
+     *      to use AUX-CL and AUX-DA pins).
      **/
     enum Mpu9250MagnRegisters {
         // Device ID.
@@ -188,6 +189,13 @@ namespace Driver {
         public:
             Mpu9250(void);
             ~Mpu9250(void);
+
+            void getAccelerator(float& x, float& y, float& z);
+            void getGyroscope(float& x, float& y, float& z);
+            void getMagnitometer(float& x, float& y, float& z);
+    
+            bool selfTest(void);
+            bool magnSelfTest(void);
     };
 }
 
