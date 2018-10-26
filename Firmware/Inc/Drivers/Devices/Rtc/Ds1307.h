@@ -4,6 +4,17 @@
 namespace Driver {	
 	const uint8_t s_kDs1307Address = 0x68 << 1;
 
+	enum Ds1307Registers {
+		kDs1307Seconds = 0x00,
+		kDs1307Minutes,
+		kDs1307Hours,
+		kDs1307WeekDay,
+		kDs1307Day,
+		kDs1307Month,
+		kDs1307Year,
+		kDs1307Control
+	};
+	
 	struct RtcDateTime {
 		// Date part.
 		uint16_t m_year;
