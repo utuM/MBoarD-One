@@ -6,7 +6,7 @@ More information will be added ASAP... :)
 ## Main information.
 Device features:
 * primary colorful 2.4'' LCD TFT display with 320x240 pixels resolution to show main information, settings and GUI;
-* secondary monochrome 0.91'' OLED display with 128x32 pixels resolution to show user-defined information such as sports activity, radio station, music player etc.; can be use like a more power efficiency display;
+* secondary monochrome 0.91'' OLED display with 128x32 pixels resolution to show user-defined information such as sports activity, radio station, music player etc.; can be use like a more power efficient display;
 * "Audio player" functions to playback all your tracks; device includes separate audio DAC, decoder, amplifier; MP3, WAV, M4A, AAC, OGG, FLAC, APE music formats support; 
 * "FM radio" functions to listen some news or other music via radio stations;
 * "TXT and books reader" functions to carry Your books always with you;
