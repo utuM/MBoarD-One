@@ -18,7 +18,7 @@ Device features:
 * Bluetooth 4.2 with aptX features to transmit audio data on Bluetooth-headphones or other wireless devices; also 3.5-mm Jack can be used (not both at the same time);
 * Wi-Fi features to setting up device wireless and update it’s firmware;
 * USB device mode to settings up device, files exchanging and firmware updating;
-* SD/SDHC/SDXC memory card formats support;
+* SD/SDHC/SDXC memory card formats support up to 32Gb;
 * replaceable battery module;
 * RGB LED to indicate You about some system events;
 * proximity sensors for hands to detect that device is in hands (or can be user-defined);
