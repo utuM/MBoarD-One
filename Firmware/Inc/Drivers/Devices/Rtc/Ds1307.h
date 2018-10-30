@@ -1,7 +1,10 @@
 #ifndef __DRIVERS_DS1307_H
 #define __DRIVERS_DS1307_H
 
+#include <stdint.h>
+
 namespace Driver {	
+    const uint16_t s_kDefaultStartYear = 2019;
 	const uint8_t s_kDs1307Address = 0x68 << 1;
 
 	enum Ds1307Registers {
@@ -17,7 +20,7 @@ namespace Driver {
 	
 	struct RtcDateTime {
 		// Date part.
-		uint16_t m_year;
+		uint8_t m_year;
 		uint8_t m_month;
 		uint8_t m_day;
 		uint8_t m_weekDay;
