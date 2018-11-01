@@ -5,6 +5,8 @@
 
 namespace Driver {
 	const uint8_t s_kMax30100Address = 0x57 << 1;
+    const uint8_t s_kMaxFifoSize = 8;
+    const float s_kTempFractCoef = 0.0625f;
 	
     enum Max30100Register {
         kInterruptStatus = 0x00,
@@ -20,6 +22,21 @@ namespace Driver {
         kTempFraction,
         kRevisionId = 0xFE,
         kPartId
+    };
+    
+    enum Max30100ModeControl {
+        kPowerDownMode = 0x80,
+        kReset = 0x40,
+        kTempIsEnabled = 0x08,
+        kHrEnabled = 0x02,
+        kSpo2Enabled
+    };
+    
+    enum Max30100InterruptBits {
+        kFullFifo = 0x80,
+        kTempIsReady = 0x40,
+        kHrIsReady = 0x20,
+        kSpo2IsReady = 0x10
     };
     
     enum Max30100Spo2SampleRate {
@@ -61,6 +78,11 @@ namespace Driver {
     
 	class Max30100 {
 		private:
+            uint8_t m_currSample;
+            uint8_t m_availSamples;
+            uint16_t m_irData[s_kMaxFifoSize];
+            uint16_t m_redData[s_kMaxFifoSize];
+        
             void _init(void);
 		
 		public:
@@ -69,6 +91,7 @@ namespace Driver {
             
             bool checkId(uint8_t& revision, uint8_t& part);
             bool getHeartRate(void);
+            bool getTemperature(float& value);
 	};
 }
 
