@@ -1,5 +1,5 @@
 /**
- *	@file		Rtc.h
+ *	@file		DriverRtc.h
  *	@version	0.3
  *	@author		utuM (Kostyantyn Komarov)
  *	@date		26.11.2018 (implementation)

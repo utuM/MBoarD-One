@@ -1,9 +1,10 @@
-#include "Rtc.h"
+#include "DRtc.h"
 
 Driver::RtcError Driver::Rtc::_init(void)
 {
     // RTC structure initialization.    
     m_handler.Instance = RTC;
+    m_handler.Init.HourFormat = RTC_HOURFORMAT_24;
     m_handler.Init.AsynchPrediv = 127;
     m_handler.Init.SynchPrediv = 255;
     m_handler.Init.OutPut = RTC_OUTPUT_DISABLE;
@@ -52,7 +53,7 @@ Driver::RtcError Driver::Rtc::getTime(RTC_TimeTypeDef& time)
         return (m_error = kRtcFailedInit);
     }
     // Receive time from the RTC module.
-    HAL_RTC_GetTime(&m_handler, &m_time, RTC_HOURFORMAT_24);
+    HAL_RTC_GetTime(&m_handler, &m_time, RTC_FORMAT_BIN);
     // Copy received data to the input structure.
     memcpy(&time, &m_time, sizeof(RTC_TimeTypeDef));
     
@@ -66,7 +67,7 @@ Driver::RtcError Driver::Rtc::getTime(uint8_t& hours, uint8_t& minutes,
         return (m_error = kRtcFailedInit);
     }
     // Receive time from the RTC module.
-    HAL_RTC_GetTime(&m_handler, &m_time, RTC_HOURFORMAT_24);
+    HAL_RTC_GetTime(&m_handler, &m_time, RTC_FORMAT_BIN);
     // Assign received values to the object ones.
     hours = m_time.Hours;
     minutes = m_time.Minutes;
