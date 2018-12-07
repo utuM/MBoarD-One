@@ -1,12 +1,11 @@
 /**
- *	@file		Rtc.cpp (module file)
- *	@version	1.0 (release)
- *	@author		utuM (Kostyantyn Komarov)
- *	@date		26.11.2018 (implementation),
- *              05.12.2018 (release)
- *  @brief		Peripheral RTC class implementation.
- *				This class describes peripheral device of selected 
- *				microcontroller. 
+ *  @file       Rtc.h (header file)
+ *  @version    1.0 (release)
+ *  @author     utuM (Kostyantyn Komarov)
+ *  @date       05.12.2018 (release)
+ *  @brief      Peripheral RTC class implementation.
+ *              This class describes peripheral device of selected 
+ *              microcontroller. 
  */
 
 #include "Rtc.h"
