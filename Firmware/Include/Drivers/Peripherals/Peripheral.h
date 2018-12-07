@@ -21,13 +21,13 @@ namespace Driver {
         private:
             char m_name[16];	///< Name of peripheral device.
 		
-		public:
+        public:
             // Class constructors and desctructor.
             Peripheral(void) { /* Leave empty for default one. */ }
             /**
              * Peripheral class constructor.
              * @param[i] const std::string name - name of current peripheral
-                                                  device.
+             *                                    device.
              **/
             Peripheral(const std::string name)
             {
