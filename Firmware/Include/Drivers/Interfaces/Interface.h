@@ -25,13 +25,13 @@ namespace Driver {
             Interface(void) { /* Leave empty. */ }
             ~Interface(void) { /* Leave empty */ }
             // Class setters.
-            virtual void setHandler(void* handler) = 0;
+            virtual void setHandler(void* pHandler) = 0;
 			
             // Basic interface methods.
             virtual bool sendByte(uint8_t reg, uint8_t value) = 0;
-            virtual bool sendData(uint8_t reg, uint8_t* data, uint16_t size) = 0;
+            virtual bool sendData(uint8_t reg, uint8_t* pData, uint16_t size) = 0;
             virtual bool recvByte(uint8_t reg, uint8_t* value) = 0;
-            virtual bool recvData(uint8_t reg, uint8_t* data, uint16_t size) = 0;
+            virtual bool recvData(uint8_t reg, uint8_t* pData, uint16_t size) = 0;
 	};
 }
 
