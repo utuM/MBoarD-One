@@ -1,8 +1,8 @@
 /**
- *	@file       Peripheral.h (header file only)
- *	@version    1.0
- *	@author     utuM (Kostyantyn Komarov)
- *	@date       7.12.2018 (release)
+ *  @file       Peripheral.h (header file only)
+ *  @version    1.0
+ *  @author     utuM (Kostyantyn Komarov)
+ *  @date       7.12.2018 (release)
  *  @brief      Peripheral controller module class implementation.
  *              This class describes peripheral device of selected 
  *              microcontroller. 
