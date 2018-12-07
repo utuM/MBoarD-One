@@ -31,17 +31,17 @@ namespace Driver {
             Device(void) { /* Leave empty. */ }
 			
 			/**
-			 * Device class constructor.
-			 * @param[i] std::string name - name of current device.
+             * Device class constructor.
+             * @param[i] std::string name - name of current device.
              * @param[i] uint8_t address - address of device that can be 
              *                             reached through interface.
-			 **/
+             **/
             Device(std::string name, uint8_t address) : m_interface(address),
                                                         m_error(DeviceNoError)
             {
                 name = (name.length() >= 16 ? name.substr(0, 15), name);
                 sprintf(m_name, "%s", name.c_str());
-			}
+            }
             ~Device(void) { /* Leave empty. */ }
 			
             // Class getter.
