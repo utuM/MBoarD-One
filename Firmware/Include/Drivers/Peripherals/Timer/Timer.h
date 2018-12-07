@@ -1,33 +1,33 @@
 /**
- *	@file		Timer.h
- *	@version	1.0
- *	@author		utuM (Kostyantyn Komarov)
- *	@date		21.11.2018 (release)
- *  @brief		Timer peripheral class implementation.
- *				This class allows to use two basic counter timers TIM6 and TIM7
+ *  @file       Timer.h (header file)
+ *  @version    1.0
+ *  @author     utuM (Kostyantyn Komarov)
+ *  @date       07.12.2018 (release)
+ *  @brief      Timer peripheral class implementation.
+ *              This class allows to use two basic counter timers TIM6 and TIM7
  *              according to the reference manual to the STM32F746ZG controller.
  *              Maximal time interval is limited by 's_kMaxTimerPeriod' constant
  *              value and equal to 1 minute.
  *              Also, every single tick calls interrupt function that triggers
  *              object flag. The flag's state can be received by the
  *              'getUpdated()' method.
- *  @todo       Automatically calculate prescaler value according to controller
- *              clocks frequencies to make period value equal to the
- *              milliseconds.
  */
 
-#ifndef __DRIVER_TIMER_H
-#define __DRIVER_TIMER_H
+#ifndef __PERIPHERAL_TIMER_H
+#define __PERIPHERAL_TIMER_H
 
 #include <stdint.h>
 
-#include "DriverPeripheral.h"
+#include "Peripheral.h"
 #include "stm32f7xx_hal.h"
 #include "stm32f7xx_it.h"
 
 namespace Driver {
-    const uint16_t s_kMaxTimerPeriod = 60000; ///< Maximal time interval between
-                                              ///< ticks.
+    const uint16_t s_kMaxTimerPeriod = 60000;   ///< Maximal time interval
+                                                ///  between ticks.
+    const uint8_t s_kDefaultApb1Divider = 8;    ///< Default APB1 bus prescaler
+                                                ///  divider (Notice: it can be
+                                                ///  different than defined).
     
     /**
      *  Timer parameters structure.
@@ -37,7 +37,6 @@ namespace Driver {
         uint16_t m_period;      ///< Timer period. Must be equal to milliseconds
                                 ///  amount and limited by 's_kMaxTimerPeriod'
                                 ///  constant value.
-        uint16_t m_prescaler;   ///< Prescaler value.
     };
     
     /**
@@ -45,12 +44,17 @@ namespace Driver {
      **/
     enum TimerError : uint8_t {
         kTimerNoError = 0x00,   ///< No error.
+        kTimerFailedInit,       ///< Some error or exception was occured during
+                                ///< timer initialization in HAL library.
         kTimerInvalidIndex,     ///< Input timer index is invalid (above 1).
         kTimerAlreadyInit,      ///< Timer by input index is already in use.
         kTimerInvalidParameter  ///< One of input object's field is invalid 
                                 ///  (equal to 0).
     };
     
+    /**
+     * Timer class.
+     **/
     class Timer : public Peripheral {
         private:
             bool m_isInit;                  ///< Complete initialization flag. 
@@ -63,18 +67,20 @@ namespace Driver {
             bool m_isLaunched;              ///< Timer launching flag.
             // Private class methods.
             TimerError _init(void);
-            TimerError _uninit(void);
+            TimerError _deinit(void);
             
         public:
-            Timer(void) : m_isInit(false) { }
+            // Class constructors and destructor.
+            Timer(void) : m_isInit(false) { /* To prevent false init. */ }
             Timer(TimerParameters& parameters);
             ~Timer(void);
-            
+            // Getters and setter.
             uint8_t getError(void) { return (uint8_t)m_error; }
             bool getUpdated(void) { return m_isUpdated; }
-            void setUpdated(bool state) { m_isUpdated = state; }
-            void toggle(bool needToEnable);
+            void setUpdated(const bool state) { m_isUpdated = state; }
+            // Other methods.
+            void toggle(const bool needToEnable);
     };
 }
 
-#endif // __DRIVER_TIMER_H
+#endif // __PERIPHERAL_TIMER_H
