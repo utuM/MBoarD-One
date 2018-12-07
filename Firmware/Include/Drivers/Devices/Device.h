@@ -22,9 +22,9 @@ namespace Driver {
     template <typename T>
     class Device {
         private:
-        char m_name[16];    ///< Device name.
+            char m_name[16];      ///< Device name.
 		
-		public:
+        public:
             T m_interface;        ///< Device's communication interface.
 
             // Class constructors and destructor.
