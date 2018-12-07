@@ -30,7 +30,7 @@ namespace Driver {
             // Class constructors and destructor.
             Device(void) { /* Leave empty. */ }
 			
-			/**
+            /**
              * Device class constructor.
              * @param[i] std::string name - name of current device.
              * @param[i] uint8_t address - address of device that can be 
