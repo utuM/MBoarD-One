@@ -22,8 +22,8 @@ namespace Driver {
 		
         public:
             // Class constructor and desctructor.
-            Interface(void) : m_error(InterfaceNoError) { /* Leave empty. */ }
-            ~Interface(void) { }
+            Interface(void) { /* Leave empty. */ }
+            ~Interface(void) { /* Leave empty */ }
             // Class setters.
             virtual void setHandler(void* handler) = 0;
 			
