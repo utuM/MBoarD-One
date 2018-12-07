@@ -113,6 +113,10 @@ Driver::I2cError Driver::I2c::_init(uint8_t index)
             m_handler.Instance = I2C2;
             break;
 			
+		case 2:
+			m_handler.Instance = I2C4;
+			break;
+			
 		default:
             break;
     }
