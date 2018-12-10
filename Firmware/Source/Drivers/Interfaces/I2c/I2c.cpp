@@ -1,6 +1,6 @@
 /**
- *  @file       I2c.cpp (module file)
- *  @version    1.0 
+ *  @file       I2c.cpp
+ *  @version    1.0 (module file)
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       10.12.2018 (release)
  *  @brief      I2C interface class.
@@ -92,53 +92,56 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* pHandler)
  **/
 bool Driver::I2c::init(I2cParameters& rParams)
 {  
-    // Check if requered I2C bus by index is not initialized.
-    if (!s_isI2cInit[rParams.m_index]) {
-        // Basic I2C handler initialization.
-        memset(&m_handler, 0x00, sizeof(I2C_HandleTypeDef));	
-        switch (rParams.m_index) {
-            case 0:
-                m_handler.Instance = I2C1;
-                break;
+	// Check if requered I2C bus by index is not initialized.
+	if (!s_isI2cInit[rParams.m_index]) {
+		// Basic I2C handler initialization.
+		memset(&m_handler, 0x00, sizeof(I2C_HandleTypeDef));	
+		switch (rParams.m_index) {
+			case 0:
+				m_handler.Instance = I2C1;
+				break;
 				
-            case 1:
-                m_handler.Instance = I2C2;
-                break;
+			case 1:
+				m_handler.Instance = I2C2;
+				break;
 				
-            default:
-                break;
-        }
-        m_handler.Init.Timing = (uint32_t)rParams.m_speed;
-        m_handler.Init.OwnAddress1 = 0;
-        m_handler.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-        m_handler.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-        m_handler.Init.OwnAddress2 = 0;
-        m_handler.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
-        m_handler.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-        m_handler.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-        if (HAL_I2C_Init(&m_handler) != HAL_OK) {
-            return true;
-        }
-        // Configure analogue filter.
-        if (HAL_I2CEx_ConfigAnalogFilter(&m_handler, I2C_ANALOGFILTER_ENABLE) 
-                                                                      != HAL_OK) {
-            return true;
-        }
-        // Configure digital filter.
-        if (HAL_I2CEx_ConfigDigitalFilter(&m_handler, 0) != HAL_OK) {
-            return true;		
-        }
-        // Copying object's initialized handler into global one by bus index.
-        memcpy(&s_globalI2cHandler[rParams.m_index], &m_handler,
-                                                     sizeof(I2C_HandleTypeDef));        
-        s_isI2cInit[rParams.m_index] = true;
-    }
-    // Take the global copy of I2C instance and copy it if the bus is already.
-    else {
-        memcpy(&m_handler, &s_globalI2cHandler[rParams.m_index],
+			default:
+				break;
+		}
+		m_handler.Init.Timing = (uint32_t)rParams.m_speed;
+		m_handler.Init.OwnAddress1 = 0;
+		m_handler.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+		m_handler.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+		m_handler.Init.OwnAddress2 = 0;
+		m_handler.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+		m_handler.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+		m_handler.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+		if (HAL_I2C_Init(&m_handler) != HAL_OK) {
+			return true;
+		}
+		// Configure analogue filter.
+		if (HAL_I2CEx_ConfigAnalogFilter(&m_handler, I2C_ANALOGFILTER_ENABLE) 
+																	  != HAL_OK) {
+			return true;
+		}
+		// Configure digital filter.
+		if (HAL_I2CEx_ConfigDigitalFilter(&m_handler, 0) != HAL_OK) {
+			return true;		
+		}
+		// Copying object's initialized handler into global one by bus index.
+		memcpy(&s_globalI2cHandler[rParams.m_index], &m_handler,
+                                                     sizeof(I2C_HandleTypeDef));     
+		s_isI2cInit[rParams.m_index] = true;
+	}
+	// Take the global copy of I2C instance and copy it if the bus is already.
+	else {
+		memcpy(&m_handler, &s_globalI2cHandler[rParams.m_index],
                                                      sizeof(I2C_HandleTypeDef));
-    }
+	}
+    // Assign other parameters binded for current device.
+    m_useRegisters = rParams.m_useRegisters;
     m_address = rParams.m_address;
+
     m_isInit = true;
     
     return false;
@@ -170,10 +173,21 @@ Driver::I2c::~I2c(void)
  **/
 bool Driver::I2c::sendByte(uint8_t reg, uint8_t value)
 {
-    if (!m_isInit || HAL_I2C_Mem_Write(&m_handler, m_address, reg, 
-                     I2C_MEMADD_SIZE_8BIT,  &value, 1, m_kI2cDefaultTimeout)
-                                                                  != HAL_OK) {
+    if (!m_isInit) {
         return true;
+    }
+    // Transmit byte according to 'm_useRegisters' flag.
+    if (m_useRegisters) {
+        if (HAL_I2C_Mem_Write(&m_handler, m_address, reg, I2C_MEMADD_SIZE_8BIT,
+                                  &value, 1, m_kI2cDefaultTimeout) != HAL_OK) {
+            return true;                      
+        }
+    }
+    else {
+        if (HAL_I2C_Master_Transmit(&m_handler, m_address, &value, 1,
+                                             m_kI2cDefaultTimeout) != HAL_OK) {
+            return true;                      
+        }
     }
 
     return false;
@@ -189,10 +203,21 @@ bool Driver::I2c::sendByte(uint8_t reg, uint8_t value)
  **/
 bool Driver::I2c::sendData(uint8_t reg, uint8_t* pData, const uint16_t size)
 {
-    if (!m_isInit || HAL_I2C_Mem_Write(&m_handler, m_address, reg,
-                     I2C_MEMADD_SIZE_8BIT, pData, size, m_kI2cDefaultTimeout)
-                                                                   != HAL_OK) {
+    if (!m_isInit) {
         return true;
+    }
+    // Transmit data according to 'm_useRegisters' flag.
+    if (m_useRegisters) {
+        if (HAL_I2C_Mem_Write(&m_handler, m_address, reg, I2C_MEMADD_SIZE_8BIT,
+                                pData, size, m_kI2cDefaultTimeout) != HAL_OK) {
+            return true;                      
+        }
+    }
+    else {
+        if (HAL_I2C_Master_Transmit(&m_handler, m_address, pData, size,
+                                             m_kI2cDefaultTimeout) != HAL_OK) {
+            return true;                      
+        }
     }
 
     return false;
@@ -208,10 +233,21 @@ bool Driver::I2c::sendData(uint8_t reg, uint8_t* pData, const uint16_t size)
  **/
 bool Driver::I2c::receiveByte(uint8_t reg, uint8_t& rValue)
 {
-    if (!m_isInit || HAL_I2C_Mem_Read(&m_handler, m_address, reg,
-                     I2C_MEMADD_SIZE_8BIT, &rValue, 1, m_kI2cDefaultTimeout)
-                                                                  != HAL_OK) {
+    if (!m_isInit) {
         return true;
+    }
+    // Receive byte according to 'm_useRegisters' flag.
+    if (m_useRegisters) {
+        if (HAL_I2C_Mem_Read(&m_handler, m_address, reg, I2C_MEMADD_SIZE_8BIT,
+                                 &rValue, 1, m_kI2cDefaultTimeout) != HAL_OK) {
+            return true;                      
+        }
+    }
+    else {
+        if (HAL_I2C_Master_Receive(&m_handler, m_address, &rValue, 1,
+                                             m_kI2cDefaultTimeout) != HAL_OK) {
+            return true;                      
+        }
     }
 
     return false;
@@ -228,10 +264,21 @@ bool Driver::I2c::receiveByte(uint8_t reg, uint8_t& rValue)
  **/
 bool Driver::I2c::receiveData(uint8_t reg, uint8_t* pData, const uint16_t size)
 {
-    if (!m_isInit || HAL_I2C_Mem_Read(&m_handler, m_address, reg,
-                     I2C_MEMADD_SIZE_8BIT, pData, size, m_kI2cDefaultTimeout)
-                                                                   != HAL_OK) {
+    if (!m_isInit) {
         return true;
+    }
+    // Receive data according to 'm_useRegisters' flag.
+    if (m_useRegisters) {
+        if (HAL_I2C_Mem_Read(&m_handler, m_address, reg, I2C_MEMADD_SIZE_8BIT,
+                                pData, size, m_kI2cDefaultTimeout) != HAL_OK) {
+            return true;                      
+        }
+    }
+    else {
+        if (HAL_I2C_Master_Receive(&m_handler, m_address, pData, size,
+                                             m_kI2cDefaultTimeout) != HAL_OK) {
+            return true;                      
+        }
     }
 
     return false;

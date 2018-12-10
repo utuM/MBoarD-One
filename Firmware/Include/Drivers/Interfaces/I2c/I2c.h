@@ -1,6 +1,6 @@
 /**
- *  @file       I2c.h (header file)
- *  @version    1.0 
+ *  @file       I2c.h
+ *  @version    1.0 (header file)
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       10.12.2018 (release)
  *  @brief      I2C interface class.
@@ -36,6 +36,7 @@ namespace Driver {
         uint8_t m_index;               ///< I2C bus index.
         uint16_t m_address;            ///< Device's address on current I2C bus.
         I2cSpeed m_speed;              ///< I2C bus speed.
+        bool m_useRegisters;           ///< Flag sets to use registers or not.
     };
 												
     /**
@@ -44,13 +45,16 @@ namespace Driver {
     class I2c : public Interface<I2C_HandleTypeDef, I2cParameters> {
         private:
             bool m_isInit;                     ///< I2C initialization init.
-            I2C_HandleTypeDef m_handler;       ///< Current I2C handler.
+            
             uint16_t m_address;                ///< I2C bus address.
             I2cSpeed m_speed;                  ///< I2C bus speed.
+            bool m_useRegisters;               ///< Flag to use registers or
+                                               ///  not.
 			
             void _deinit();
 		
         public:          
+            I2C_HandleTypeDef m_handler;       ///< Current I2C handler.
             // Constructors and destructor.
             I2c(void) : m_isInit(false) { /* Leave empty. */ }
             ~I2c(void);
