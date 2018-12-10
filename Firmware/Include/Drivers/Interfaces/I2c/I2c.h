@@ -1,6 +1,6 @@
 /**
  *  @file       I2c.h
- *  @version    1.0 (header file)
+ *  @version    1.1 (header file)
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       10.12.2018 (release)
  *  @brief      I2C interface class.
