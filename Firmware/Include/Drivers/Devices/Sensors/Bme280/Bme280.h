@@ -115,10 +115,10 @@ namespace Driver {
     enum Bme280PressureCoef {
         kPressOrsSkipped = 0x00,
         kPressOrs1       = 0x04,
-        kPressOrs2 	     = 0x08,
-        kPressOrs4 	     = 0x0C,
-        kPressOrs8 	     = 0x10,
-        kPressOrs16 	 = 0x14,
+        kPressOrs2       = 0x08,
+        kPressOrs4       = 0x0C,
+        kPressOrs8       = 0x10,
+        kPressOrs16      = 0x14,
     };
     /**
      * BME280 temperature data oversampling coefficient values.
