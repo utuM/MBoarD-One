@@ -1,6 +1,6 @@
 /**
- *  @file       I2c.cpp
- *  @version    1.0 (module file)
+ *  @file       I2c.cpp (module file)
+ *  @version    1.0 
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       10.12.2018 (release)
  *  @brief      I2C interface class.
