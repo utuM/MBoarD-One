@@ -107,7 +107,7 @@ bool Driver::I2c::init(I2cParameters& rParams)
 				
             default:
                 break;
-		}
+        }
         m_handler.Init.Timing = (uint32_t)rParams.m_speed;
         m_handler.Init.OwnAddress1 = 0;
         m_handler.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
