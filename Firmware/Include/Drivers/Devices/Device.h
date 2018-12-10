@@ -3,7 +3,7 @@
 
 /**
  *  @file       Device.h
- *  @version    1.0
+ *  @version    1.0.1
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       7.12.2018 (release)
  *  @brief      Basic external devices or sensors class description.
@@ -33,13 +33,10 @@ namespace Driver {
             /**
              * Device class constructor.
              * @param[i] std::string name - name of current device.
-             * @param[i] uint8_t address - address of device that can be 
-             *                             reached through interface.
              **/
-            Device(std::string name, uint8_t address) : m_interface(address),
-                                                        m_error(DeviceNoError)
+            Device(std::string name)
             {
-                name = (name.length() >= 16 ? name.substr(0, 15), name);
+                name = (name.length() >= 16 ? name.substr(0, 15) : name);
                 sprintf(m_name, "%s", name.c_str());
             }
             ~Device(void) { /* Leave empty. */ }
