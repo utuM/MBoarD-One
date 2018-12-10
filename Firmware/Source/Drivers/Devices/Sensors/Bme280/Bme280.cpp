@@ -1,118 +1,148 @@
 /**
- *  @file       Bme280.cpp (module file)
+ *  @file       Bme280.h (module file)
  *  @version    1.0
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       10.12.2018 (release)
  *  @brief      BME280 sensor class.
  *              Sensor provides to receive data about pressure, temperature
- *              and humidity of environment. 
+ *              and humidity of environment.
+ *              To start interactions with sensor just need to initialize the
+ *              class object and call 'update(...)' method every time when
+ *              needed.
  **/
 
 #include "Bme280.h"
 
+/**
+ * Sensor initialization.
+ * @param[i] Bme280Patterns pattern - pattern of settings set that in automatic
+ *                                    way prepares sensor for work.
+ * @return kNoError           - no error;
+ *         kErrCtrlConfigData - error during sending value into 'CTRL_CONFIG'
+ *                              register;
+ *         kErrCtrlHumData    - error during sending value into 'CTRL_HUM'
+ *                              register;
+ *         kErrCtrlMeasData   - error during sending value into 'CTRL_MEAS'
+ *                              register.
+ **/
 Driver::Bme280ErrorCodes Driver::Bme280::_init(Bme280Patterns pattern)
 {
     // Initialized array by input device work pattern.
     uint8_t l_settings[6] = {0};
     switch (pattern) {
-        // "Weather" pattern.
-        case BME280_PATTERN_WEATHER: {
-            l_settings[0] = (uint8_t)BME280_NORMAL_MODE;
-            l_settings[1] = (uint8_t)BME280_STANDBY_62_5MS;
-            l_settings[2] = (uint8_t)BME280_PRESS_ORS_1;
-            l_settings[3] = (uint8_t)BME280_TEMPR_ORS_1;
-            l_settings[4] = (uint8_t)BME280_HUMID_ORS_1;
-            l_settings[5] = (uint8_t)BME280_FILTER_OFF;
-        } break;
-        // "Humidity" pattern.
-        case BME280_PATTERN_HUMIDITY: {
-            l_settings[0] = (uint8_t)BME280_NORMAL_MODE;
-            l_settings[1] = (uint8_t)BME280_STANDBY_500MS;
-            l_settings[2] = (uint8_t)BME280_PRESS_ORS_SKIPPED;
-            l_settings[3] = (uint8_t)BME280_TEMPR_ORS_1;
-            l_settings[4] = (uint8_t)BME280_HUMID_ORS_1;
-            l_settings[5] = (uint8_t)BME280_FILTER_OFF;
-        } break;
-        // "Indoor" pattern.
-        case BME280_PATTERN_INDOOR: {
-            l_settings[0] = (uint8_t)BME280_NORMAL_MODE;
-            l_settings[1] = (uint8_t)BME280_STANDBY_500MS;
-            l_settings[2] = (uint8_t)BME280_PRESS_ORS_16;
-            l_settings[3] = (uint8_t)BME280_TEMPR_ORS_2;
-            l_settings[4] = (uint8_t)BME280_HUMID_ORS_1;
-            l_settings[5] = (uint8_t)BME280_FILTER_16;
-        } break;
-        // "Gaming" pattern.
-        case BME280_PATTERN_GAMING: {
-            l_settings[0] = (uint8_t)BME280_NORMAL_MODE;
-            l_settings[1] = (uint8_t)BME280_STANDBY_62_5MS;
-            l_settings[2] = (uint8_t)BME280_PRESS_ORS_4;
-            l_settings[3] = (uint8_t)BME280_TEMPR_ORS_1;
-            l_settings[4] = (uint8_t)BME280_HUMID_ORS_SKIPPED;
-            l_settings[5] = (uint8_t)BME280_FILTER_16;
-        } break;
+        case BME280_PATTERN_WEATHER:
+            l_settings[0] = (uint8_t)kNormalMode;
+            l_settings[1] = (uint8_t)kStandby625Ms;
+            l_settings[2] = (uint8_t)kPressOrs1;
+            l_settings[3] = (uint8_t)kTempOrs1;
+            l_settings[4] = (uint8_t)kHumidOrs1;
+            l_settings[5] = (uint8_t)kFilterOff;
+            break;
+			
+        case BME280_PATTERN_HUMIDITY:
+            l_settings[0] = (uint8_t)kNormalMode;
+            l_settings[1] = (uint8_t)kStandby500Ms;
+            l_settings[2] = (uint8_t)kPressOrsSkipped;
+            l_settings[3] = (uint8_t)kTempOrs1;
+            l_settings[4] = (uint8_t)kHumidOrs1;
+            l_settings[5] = (uint8_t)kFilterOff;
+            break;
+		
+        case BME280_PATTERN_INDOOR:
+            l_settings[0] = (uint8_t)kNormalMode;
+            l_settings[1] = (uint8_t)kStandby500Ms;
+            l_settings[2] = (uint8_t)kPressOrs16;
+            l_settings[3] = (uint8_t)kTempOrs2;
+            l_settings[4] = (uint8_t)kHumidOrs1;
+            l_settings[5] = (uint8_t)kFilter16;
+            break;
+		
+        case BME280_PATTERN_GAMING:
+            l_settings[0] = (uint8_t)kNormalMode;
+            l_settings[1] = (uint8_t)kStandby625Ms;
+            l_settings[2] = (uint8_t)kPressOrs4;
+            l_settings[3] = (uint8_t)kTempOrs1;
+            l_settings[4] = (uint8_t)kHumidOrsSkipped;
+            l_settings[5] = (uint8_t)kFilter16;
+            break;
         
-        default: {
-
-        } break;
+        default:
+            break;
     }
     
     // Setting up 'BME280_CONFIG' register.
-    _turnPower(false);
+    _toggle(false);
     m_buffer[0] = l_settings[1] | l_settings[5];
-    if (m_interface.sendByte(BME280_CONFIG, m_buffer[0])) {
-        return BME280_ERR_CONFIG_DATA;
+    if (m_interface.sendByte(kConfig, m_buffer[0])) {
+        return kErrCtrlConfigData;
     }
-    _turnPower(true);
+    _toggle(true);
     // Setting up 'BME280_CTRL_HUM' register.
     m_buffer[0] = l_settings[4];
-    if (m_interface.sendByte(BME280_CTRL_HUM, m_buffer[0])) {
-        return BME280_ERR_CTRL_HUM_DATA;
+    if (m_interface.sendByte(kCtrlHum, m_buffer[0])) {
+        return kErrCtrlHumData;
     }
     // Setting up 'BME280_CTRL_MEAS' register.
     m_buffer[0] = l_settings[0] | l_settings[2] | l_settings[3];
     m_bufferSize = BME280_BUFFER_SIZE;
-    if (m_interface.sendByte(BME280_CTRL_MEAS, m_buffer[0])) {
-        return BME280_ERR_CTRL_MEAS_DATA;
+    if (m_interface.sendByte(kCtrlMeas, m_buffer[0])) {
+        return kErrCtrlMeasData;
     }
     // Read componensation data registers.
     _readCompensationData();
     
-    return BME280_NOERROR;
+    return kNoError;
 }
 
-Driver::Bme280ErrorCodes Driver::Bme280::_turnPower(bool isPowerOn)
+/**
+ * Sensor power on/off.
+ * @param[i] bool isPowerOn - flag that turns device into sleep mode or makes
+ *                            it awake.
+ * @return kNoError      - no error;
+ *         kErrReadData  - error during reading data from register;
+ *         kErrWriteData - error during sending data from register.
+ **/
+Driver::Bme280ErrorCodes Driver::Bme280::_toggle(bool isPowerOn)
 {
     uint8_t l_regValue;
     // Read 'CTRL_MEAS' register before change.
-    if (m_interface.receiveByte(BME280_CTRL_MEAS, l_regValue)) {
-        return BME280_ERR_READ_DATA;
+    if (m_interface.receiveByte(kCtrlMeas, l_regValue)) {
+        return kErrReadData;
     }
     // Change register work mode bit according to input state.
+    l_regValue = (isPowerOn ? l_regValue | 0x03 : l_regValue & 0xFFFC);
     isPowerOn == true ? l_regValue |= 0x03 : l_regValue &= 0xFFFC;
-    if (m_interface.sendByte(BME280_CTRL_MEAS, l_regValue)) {
-        return BME280_ERR_WRITE_DATA;
+    if (m_interface.sendByte(kCtrlMeas, l_regValue)) {
+        return kErrWriteData;
     }
 
-    return BME280_NOERROR;
+    return kNoError;
 }
 
+/**
+ * Sensors componsation reading.
+ * @return kNoError      - no error;
+ *         kErrCompensT  - error on temperature compensation reading;
+ *         kErrCompensP  - error on pressure compensation reading;
+ *         kErrCompensH1 - error on 1st part humidity compensation reading;
+ *         kErrCompensH2 - error on 2nd part humidity compensation reading;
+ **/
 Driver::Bme280ErrorCodes Driver::Bme280::_readCompensationData(void)
 {    
     // Read temperature compensation registers first.
     memset(&m_buffer[0], 0x00, TEMPR_COMPENS_SIZE * 2);
-    if (m_interface.receiveData(BME280_COMPENS_T1, &m_buffer[0], 
+    if (m_interface.receiveData(kCompensT1, &m_buffer[0], 
                                 TEMPR_COMPENS_SIZE * 2)) {
-        return BME280_ERR_COMPENS_T;
+        return kErrCompensT;
     }
     m_temperCompensData[0] = m_buffer[0] | (int16_t)m_buffer[1] << 8;
     m_temperCompensData[1] = m_buffer[2] | (int16_t)m_buffer[3] << 8;
     m_temperCompensData[2] = m_buffer[4] | (int16_t)m_buffer[5] << 8;
     // Read pressure compensation registers.
     memset(&m_buffer[0], 0x00, PRESS_COMPENS_SIZE * 2);
-    if (m_interface.receiveData(BME280_COMPENS_P1, &m_buffer[0], 
+    if (m_interface.receiveData(kCompensP1, &m_buffer[0], 
                                 PRESS_COMPENS_SIZE * 2)) {
-        return BME280_ERR_COMPENS_P;
+        return kErrCompensP;
     }
     m_pressureCompensData[0] = m_buffer[0]  | (int16_t)m_buffer[1]  << 8;
     m_pressureCompensData[1] = m_buffer[2]  | (int16_t)m_buffer[3]  << 8;
@@ -124,13 +154,13 @@ Driver::Bme280ErrorCodes Driver::Bme280::_readCompensationData(void)
     m_pressureCompensData[7] = m_buffer[14] | (int16_t)m_buffer[15] << 8;
     m_pressureCompensData[8] = m_buffer[16] | (int16_t)m_buffer[17] << 8;
     // Read humidity compensation registers.
-    if (m_interface.receiveByte(BME280_COMPENS_H1, m_buffer[0])) {
-        return BME280_ERR_COMPENS_H1;
+    if (m_interface.receiveByte(kCompensH1, m_buffer[0])) {
+        return kErrCompensH1;
     }
     m_humidityCompensData[0] = m_buffer[0];
     memset(&m_buffer[0], 0x00, 7);
-    if (m_interface.receiveData(BME280_COMPENS_H2, &m_buffer[0], 7)) {
-        return BME280_ERR_COMPENS_H2;
+    if (m_interface.receiveData(kCompensH2, &m_buffer[0], 7)) {
+        return kErrCompensH2;
     }
     m_humidityCompensData[1] = (int16_t)m_buffer[1] << 8 | m_buffer[0];
     m_humidityCompensData[2] = m_buffer[2];
@@ -139,14 +169,19 @@ Driver::Bme280ErrorCodes Driver::Bme280::_readCompensationData(void)
                                                     ((m_buffer[4] & 0xF0) >> 4);
     m_humidityCompensData[5] = m_buffer[6];
     
-    return BME280_NOERROR;
+    return kNoError;
 }
 
+/**
+ * Computing current temperature value.
+ * @param[i] bool isKelvin - flag that decided to convert value into Celsius
+ *                           or Kelvin.
+ **/
 void Driver::Bme280::_getTemperature(bool isKelvin)
 {
     // Read data from temperature registers.
     memset(&m_buffer[0], 0x00, 3);
-    if (m_interface.receiveData(BME280_TEMPERATURE_MSB, &m_buffer[0], 3)) {
+    if (m_interface.receiveData(kTemperatureMsb, &m_buffer[0], 3)) {
         return;
     }
     m_temperCode = (int)m_buffer[0] << 12 | (int)m_buffer[1] << 4 |
@@ -172,10 +207,15 @@ void Driver::Bme280::_getTemperature(bool isKelvin)
     m_temperature = l_value;
 }
 
+/**
+ * Computing current pressure value.
+ * @param[i] bool isMmhg - flag that decided to convert value into Bar or 
+ *                         mmHg.
+ **/
 void Driver::Bme280::_getPressure(bool isMmhg)
 {
     // Read data from pressure registers.
-    if (m_interface.receiveData(BME280_PRESSURE_MSB, &m_buffer[0], 3)) {
+    if (m_interface.receiveData(kPressureMsb, &m_buffer[0], 3)) {
         return;
     }
     m_pressureCode = (int)m_buffer[0] << 12 | (int)m_buffer[1] << 4 |
@@ -218,10 +258,13 @@ void Driver::Bme280::_getPressure(bool isMmhg)
     }
 }
 
+/**
+ * Computing current humidity value.
+ **/
 void Driver::Bme280::_getHumidity(void)
 {
     // Read data from humidity registers.
-    if (m_interface.receiveData(BME280_HUMIDITY_MSB, &m_buffer[0], 2)) {
+    if (m_interface.receiveData(kHumidityMsb, &m_buffer[0], 2)) {
         return;
     }
     m_humidityCode = (int)m_buffer[0] << 8 | m_buffer[1];
@@ -242,6 +285,9 @@ void Driver::Bme280::_getHumidity(void)
     m_humidity = ((uint32_t)l_value >> 12) / 1024.0;
 }
 
+/**
+ * BME280 class constructor.
+ **/
 Driver::Bme280::Bme280(void) : Device("BME280")
 {
     // Zeroing all basic object fields.
@@ -255,9 +301,13 @@ Driver::Bme280::Bme280(void) : Device("BME280")
     };
     m_interface.init(l_parameters);
     
-    _init(BME280_PATTERN_INDOOR);
+    _init(kPatternIndoor);
 }
 
+/**
+ * BME280 class constructor.
+ * @param[i] - settings set to be assigned to the sensors registers.
+ **/
 Driver::Bme280::Bme280(Bme280Patterns pattern) : Device("BME280")
 {
     // Zeroing all basic object fields.
@@ -274,12 +324,14 @@ Driver::Bme280::Bme280(Bme280Patterns pattern) : Device("BME280")
     _init(pattern);
 }
 
-Driver::Bme280::~Bme280(void)
-{
-
-}
-
-void Driver::Bme280::update(float& temperature, float& pressure, float& humidity)
+/**
+ * BME280 values updating.
+ * @param[o] float& rTemperature - reference to temperature variable.
+ * @param[o] float& rPressure - reference to pressure variable.
+ * @param[o] float& rHumidity - reference to humidity variable.
+ **/
+void Driver::Bme280::update(float& rTemperature, float& rPressure,
+                                                              float& rHumidity)
 {
     // Get values.
     _getTemperature(false);
