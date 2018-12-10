@@ -1,5 +1,5 @@
 /**
- *  @file       Peripheral.h (header file only)
+ *  @file       Peripheral.h (header only)
  *  @version    1.0
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       7.12.2018 (release)

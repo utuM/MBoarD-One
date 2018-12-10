@@ -1,8 +1,5 @@
-#ifndef __DRIVER_DEVICE_H
-#define __DRIVER_DEVICE_H
-
 /**
- *  @file       Device.h
+ *  @file       Device.h (header only)
  *  @version    1.0.1
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       7.12.2018 (release)
@@ -10,6 +7,9 @@
  *              This class represents device or a sensor using fields
  *              that give all basic information you need. 
  **/
+
+#ifndef __DRIVER_DEVICE_H
+#define __DRIVER_DEVICE_H
 
 #include <string>
 

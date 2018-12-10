@@ -1,5 +1,5 @@
 /**
- *  @file       Rtc.h (header file)
+ *  @file       Rtc.h (module file)
  *  @version    1.0 (release)
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       05.12.2018 (release)
