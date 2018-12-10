@@ -45,9 +45,9 @@ namespace Driver {
      **/
     enum Bme280Registers : uint8_t {
         // Current pressure data registers.
-        kPressureMsb  	   = 0xF7,
-        kPressureLsb  	   = 0xF8,
-        kPressureXlsb 	   = 0xF9,
+        kPressureMsb       = 0xF7,
+        kPressureLsb       = 0xF8,
+        kPressureXlsb      = 0xF9,
         // Current temperature data registers.
         kTemperatureMsb    = 0xFA,
         kTemperatureLsb    = 0xFB,
@@ -56,37 +56,37 @@ namespace Driver {
         kHumidityMsb       = 0xFD,
         kHumidityLsb       = 0xFE,  
         // Device ID number register.
-        kIdNumber	       = 0xD0,
+        kIdNumber          = 0xD0,
         // Device reset register.
-        kReset     	       = 0xE0,
+        kReset             = 0xE0,
         // Humidity measurement oversampling register.
         kCtrlHum           = 0xF2,
         // Device status register.
-        kStatus    	       = 0xF3,
+        kStatus            = 0xF3,
         // Device configuration.
         kCtrlMeas          = 0xF4,
         kConfig            = 0xF5,
         // Temperature compensation data registers.
-        kCompensT1 	       = 0x88,
-        kCompensT2 	       = 0x8A,
-        kCompensT3 	       = 0x8C,
+        kCompensT1         = 0x88,
+        kCompensT2         = 0x8A,
+        kCompensT3         = 0x8C,
         // Pressure compensation data registers.
-        kCompensP1 	       = 0x8E,
-        kCompensP2 	       = 0x90,
-        kCompensP3 	       = 0x92,
-        kCompensP4 	       = 0x94,
-        kCompensP5 	       = 0x96,
-        kCompensP6 	       = 0x98,
-        kCompensP7 	       = 0x9A,
+        kCompensP1         = 0x8E,
+        kCompensP2         = 0x90,
+        kCompensP3         = 0x92,
+        kCompensP4         = 0x94,
+        kCompensP5         = 0x96,
+        kCompensP6         = 0x98,
+        kCompensP7         = 0x9A,
         kCompensP8         = 0x9C,
-        kCompensP9 	       = 0x9E,
+        kCompensP9         = 0x9E,
         // Humidity compensation data registers.
-        kCompensH1 	       = 0xA1,
-        kCompensH2 	       = 0xE1,
-        kCompensH3 	       = 0xE3,
-        kCompensH4 	       = 0xE4,
-        kCompensH5 	       = 0xE5,
-        kCompensH6 	       = 0xE7
+        kCompensH1         = 0xA1,
+        kCompensH2         = 0xE1,
+        kCompensH3         = 0xE3,
+        kCompensH4         = 0xE4,
+        kCompensH5         = 0xE5,
+        kCompensH6         = 0xE7
     };
 	
     /**
@@ -103,10 +103,10 @@ namespace Driver {
     enum Bme280HumidityCoef {
         kHumidOrsSkipped = 0x00,
         kHumidOrs1       = 0x01,
-        kHumidOrs2 	     = 0x02,
-        kHumidOrs4 	     = 0x03,
-        kHumidOrs8 	     = 0x04,
-        kHumidOrs16 	 = 0x05,
+        kHumidOrs2       = 0x02,
+        kHumidOrs4       = 0x03,
+        kHumidOrs8       = 0x04,
+        kHumidOrs16      = 0x05,
     };
 	
     /**
@@ -126,10 +126,10 @@ namespace Driver {
     enum Bme280TemperatureCoef {
         kTempOrsSkipped  = 0x00,
         kTempOrs1        = 0x20,
-        kTempOrs2 	     = 0x40,
-        kTempOrs4 	     = 0x60,
-        kTempOrs8 	     = 0x80,
-        kTempOrs16 	     = 0xA0,
+        kTempOrs2        = 0x40,
+        kTempOrs4        = 0x60,
+        kTempOrs8        = 0x80,
+        kTempOrs16       = 0xA0,
     };
     /**
      * BME280 work mode.
@@ -178,7 +178,7 @@ namespace Driver {
      **/
     enum Bme280ErrorCodes {
         kNoError               = 0x00, ///< No error.
-		kErrCtrlMeasData               ///< An error during sending settings
+        kErrCtrlMeasData               ///< An error during sending settings
                                        ///  to the 'CTRL_MEAS' register.
         kErrCtrlHumData,               ///< An error during sending settings
                                        ///  to the 'CTRL_HUM' register.
