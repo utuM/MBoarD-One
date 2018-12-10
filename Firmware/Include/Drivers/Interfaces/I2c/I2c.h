@@ -1,8 +1,8 @@
 /**
  *  @file       I2c.h
- *  @version    0.8 (header file)
+ *  @version    1.0 (header file)
  *  @author     utuM (Kostyantyn Komarov)
- *  @date       7.12.2018 (implementation)
+ *  @date       10.12.2018 (release)
  *  @brief      I2C interface class.
  *              Represented as a child of 'Interface' basic class. Can be used
  *              as template object for 'Device' class objects.
@@ -12,8 +12,8 @@
 #define __INTERFACE_I2C_H
 
 #include "Interface.h"
-#include "i2c.h"
-
+#include "stm32f7xx_hal.h"
+   
 namespace Driver {
     const uint16_t m_kI2cDefaultTimeout = 1000; ///< Default timeout value
                                                 ///  after which the data
@@ -25,42 +25,41 @@ namespace Driver {
      **/
     enum I2cSpeed : uint32_t {
         kI2cNormalMode   = 0x00000E12, ///< 100 kHz speed.
-		kI2cFastMode     = 0x00000004, ///< 400 kHz speed.
-		kI2cFastModePlus = 0x00000000  ///< 1000 kHz speed.
+        kI2cFastMode     = 0x00000004, ///< 400 kHz speed.
+        kI2cFastModePlus = 0x00000000  ///< 1000 kHz speed.
     };
-		
+    
     /**
-     * I2c interface possible errors.
-     **/	 
-    enum I2cError : uint8_t {
-        kI2cNoError = 0x00
-	};
+     * I2C parameters structure.
+     **/
+    struct I2cParameters {
+        uint8_t m_index;               ///< I2C bus index.
+        uint16_t m_address;            ///< Device's address on current I2C bus.
+        I2cSpeed m_speed;              ///< I2C bus speed.
+    };
 												
     /**
      * I2C interface class.
      **/
-    class I2c : public Interface {
+    class I2c : public Interface<I2C_HandleTypeDef, I2cParameters> {
         private:
+            bool m_isInit;                     ///< I2C initialization init.
             I2C_HandleTypeDef m_handler;       ///< Current I2C handler.
-            uint8_t m_address;                 ///< I2C bus address.
+            uint16_t m_address;                ///< I2C bus address.
             I2cSpeed m_speed;                  ///< I2C bus speed.
 			
-			I2cError _init(uint8_t index);
-			I2cError _deinit();
+            void _deinit();
 		
-        public:
+        public:          
             // Constructors and destructor.
-            I2c(void) { /* Leave empty. */ }
-            I2c(uint8_t address, I2cSpeed speed);
+            I2c(void) : m_isInit(false) { /* Leave empty. */ }
             ~I2c(void);
-            
-            // Setter.
-            void setHandler(void* pHandler) { m_handler = (I2C_HandleTypeDef*)handler; }
 
-            /// Other methods.
+            // Basic methods.
+            bool init(I2cParameters& rParameters);
             bool sendByte(uint8_t reg, uint8_t value);
             bool sendData(uint8_t reg, uint8_t* pData, const uint16_t size);
-            bool receiveByte(uint8_t reg, uint8_t value);
+            bool receiveByte(uint8_t reg, uint8_t& rValue);
             bool receiveData(uint8_t reg, uint8_t* pData, const uint16_t size);
     };
 }
