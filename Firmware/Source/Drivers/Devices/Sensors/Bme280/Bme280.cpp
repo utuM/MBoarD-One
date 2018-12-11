@@ -1,6 +1,6 @@
 /**
  *  @file       Bme280.h (module file)
- *  @version    1.0
+ *  @version    1.0.2
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       10.12.2018 (release)
  *  @brief      BME280 sensor class.
@@ -9,6 +9,14 @@
  *              To start interactions with sensor just need to initialize the
  *              class object and call 'update(...)' method every time when
  *              needed.
+ *  @updates    New in current version:
+ *              + Changed all enumeration fields to make them unique in 'Driver'
+ *                namespace.
+ *              + Moved 'toggle()' method from the private to public area to
+ *                make it enable for turn on/off sensor.
+ *              + Placed 'toggle()' method calling inside the class desctructor
+ *                to turn sensor into sleep mode.
+ *              + Added 'm_error' field to detect and log class object state.
  **/
 
 #include "Bme280.h"
@@ -17,53 +25,53 @@
  * Sensor initialization.
  * @param[i] Bme280Patterns pattern - pattern of settings set that in automatic
  *                                    way prepares sensor for work.
- * @return kNoError           - no error;
- *         kErrCtrlConfigData - error during sending value into 'CTRL_CONFIG'
- *                              register;
- *         kErrCtrlHumData    - error during sending value into 'CTRL_HUM'
- *                              register;
- *         kErrCtrlMeasData   - error during sending value into 'CTRL_MEAS'
- *                              register.
+ * @return kBmeNoError           - no error;
+ *         kBmeErrCtrlConfigData - error during sending value into 'CTRL_CONFIG'
+ *                                 register;
+ *         kBmeErrCtrlHumData    - error during sending value into 'CTRL_HUM'
+ *                                 register;
+ *         kBmeErrCtrlMeasData   - error during sending value into 'CTRL_MEAS'
+ *                                 register.
  **/
 Driver::Bme280ErrorCodes Driver::Bme280::_init(Bme280Patterns pattern)
 {
     // Initialized array by input device work pattern.
     uint8_t l_settings[6] = {0};
     switch (pattern) {
-        case BME280_PATTERN_WEATHER:
-            l_settings[0] = (uint8_t)kNormalMode;
-            l_settings[1] = (uint8_t)kStandby625Ms;
-            l_settings[2] = (uint8_t)kPressOrs1;
-            l_settings[3] = (uint8_t)kTempOrs1;
-            l_settings[4] = (uint8_t)kHumidOrs1;
-            l_settings[5] = (uint8_t)kFilterOff;
+        case kBmePatternWeather:
+            l_settings[0] = (uint8_t)kBmeNormalMode;
+            l_settings[1] = (uint8_t)kBmeStandby625Ms;
+            l_settings[2] = (uint8_t)kBmePressOrs1;
+            l_settings[3] = (uint8_t)kBmeTempOrs1;
+            l_settings[4] = (uint8_t)kBmeHumidOrs1;
+            l_settings[5] = (uint8_t)kBmeFilterOff;
             break;
 			
-        case BME280_PATTERN_HUMIDITY:
-            l_settings[0] = (uint8_t)kNormalMode;
-            l_settings[1] = (uint8_t)kStandby500Ms;
-            l_settings[2] = (uint8_t)kPressOrsSkipped;
-            l_settings[3] = (uint8_t)kTempOrs1;
-            l_settings[4] = (uint8_t)kHumidOrs1;
-            l_settings[5] = (uint8_t)kFilterOff;
+        case kBmePatternHumidity:
+            l_settings[0] = (uint8_t)kBmeNormalMode;
+            l_settings[1] = (uint8_t)kBmeStandby500Ms;
+            l_settings[2] = (uint8_t)kBmePressOrsSkipped;
+            l_settings[3] = (uint8_t)kBmeTempOrs1;
+            l_settings[4] = (uint8_t)kBmeHumidOrs1;
+            l_settings[5] = (uint8_t)kBmeFilterOff;
             break;
 		
-        case BME280_PATTERN_INDOOR:
-            l_settings[0] = (uint8_t)kNormalMode;
-            l_settings[1] = (uint8_t)kStandby500Ms;
-            l_settings[2] = (uint8_t)kPressOrs16;
-            l_settings[3] = (uint8_t)kTempOrs2;
-            l_settings[4] = (uint8_t)kHumidOrs1;
-            l_settings[5] = (uint8_t)kFilter16;
+        case kBmePatternIndoor:
+            l_settings[0] = (uint8_t)kBmeNormalMode;
+            l_settings[1] = (uint8_t)kBmeStandby500Ms;
+            l_settings[2] = (uint8_t)kBmePressOrs16;
+            l_settings[3] = (uint8_t)kBmeTempOrs2;
+            l_settings[4] = (uint8_t)kBmeHumidOrs1;
+            l_settings[5] = (uint8_t)kBmeFilter16;
             break;
 		
-        case BME280_PATTERN_GAMING:
-            l_settings[0] = (uint8_t)kNormalMode;
-            l_settings[1] = (uint8_t)kStandby625Ms;
-            l_settings[2] = (uint8_t)kPressOrs4;
-            l_settings[3] = (uint8_t)kTempOrs1;
-            l_settings[4] = (uint8_t)kHumidOrsSkipped;
-            l_settings[5] = (uint8_t)kFilter16;
+        case kBmePatternGaming:
+            l_settings[0] = (uint8_t)kBmeNormalMode;
+            l_settings[1] = (uint8_t)kBmeStandby625Ms;
+            l_settings[2] = (uint8_t)kBmePressOrs4;
+            l_settings[3] = (uint8_t)kBmeTempOrs1;
+            l_settings[4] = (uint8_t)kBmeHumidOrsSkipped;
+            l_settings[5] = (uint8_t)kBmeFilter16;
             break;
         
         default:
@@ -71,78 +79,54 @@ Driver::Bme280ErrorCodes Driver::Bme280::_init(Bme280Patterns pattern)
     }
     
     // Setting up 'BME280_CONFIG' register.
-    _toggle(false);
+    toggle(false);
     m_buffer[0] = l_settings[1] | l_settings[5];
-    if (m_interface.sendByte(kConfig, m_buffer[0])) {
-        return kErrCtrlConfigData;
+    if (m_interface.sendByte(kBmeConfig, m_buffer[0])) {
+        return (m_error = kBmeErrCtrlConfigData);
     }
-    _toggle(true);
+    toggle(true);
     // Setting up 'BME280_CTRL_HUM' register.
     m_buffer[0] = l_settings[4];
-    if (m_interface.sendByte(kCtrlHum, m_buffer[0])) {
-        return kErrCtrlHumData;
+    if (m_interface.sendByte(kBmeCtrlHum, m_buffer[0])) {
+        return (m_error = kBmeErrCtrlHumData);
     }
     // Setting up 'BME280_CTRL_MEAS' register.
     m_buffer[0] = l_settings[0] | l_settings[2] | l_settings[3];
     m_bufferSize = BME280_BUFFER_SIZE;
-    if (m_interface.sendByte(kCtrlMeas, m_buffer[0])) {
-        return kErrCtrlMeasData;
+    if (m_interface.sendByte(kBmeCtrlMeas, m_buffer[0])) {
+        return (m_error = kBmeErrCtrlMeasData);
     }
     // Read componensation data registers.
     _readCompensationData();
     
-    return kNoError;
-}
-
-/**
- * Sensor power on/off.
- * @param[i] bool isPowerOn - flag that turns device into sleep mode or makes
- *                            it awake.
- * @return kNoError      - no error;
- *         kErrReadData  - error during reading data from register;
- *         kErrWriteData - error during sending data from register.
- **/
-Driver::Bme280ErrorCodes Driver::Bme280::_toggle(bool isPowerOn)
-{
-    uint8_t l_regValue;
-    // Read 'CTRL_MEAS' register before change.
-    if (m_interface.receiveByte(kCtrlMeas, l_regValue)) {
-        return kErrReadData;
-    }
-    // Change register work mode bit according to input state.
-    l_regValue = (isPowerOn ? l_regValue | 0x03 : l_regValue & 0xFFFC);
-    isPowerOn == true ? l_regValue |= 0x03 : l_regValue &= 0xFFFC;
-    if (m_interface.sendByte(kCtrlMeas, l_regValue)) {
-        return kErrWriteData;
-    }
-
-    return kNoError;
+    m_isInit = true;
+    return (m_error = kBmeNoError);
 }
 
 /**
  * Sensors componsation reading.
- * @return kNoError      - no error;
- *         kErrCompensT  - error on temperature compensation reading;
- *         kErrCompensP  - error on pressure compensation reading;
- *         kErrCompensH1 - error on 1st part humidity compensation reading;
- *         kErrCompensH2 - error on 2nd part humidity compensation reading;
+ * @return kBmeNoError       - no error;
+ *         kBmeErrCompensT   - error on temperature compensation reading;
+ *         kBmeErrCompensP   - error on pressure compensation reading;
+ *         kBmeErrCompensH1  - error on 1st part humidity compensation reading;
+ *         kBmeErrCompensH2  - error on 2nd part humidity compensation reading;
  **/
 Driver::Bme280ErrorCodes Driver::Bme280::_readCompensationData(void)
 {    
     // Read temperature compensation registers first.
     memset(&m_buffer[0], 0x00, TEMPR_COMPENS_SIZE * 2);
-    if (m_interface.receiveData(kCompensT1, &m_buffer[0], 
+    if (m_interface.receiveData(kBmeCompensT1, &m_buffer[0], 
                                 TEMPR_COMPENS_SIZE * 2)) {
-        return kErrCompensT;
+        return kBmeErrCompensT;
     }
     m_temperCompensData[0] = m_buffer[0] | (int16_t)m_buffer[1] << 8;
     m_temperCompensData[1] = m_buffer[2] | (int16_t)m_buffer[3] << 8;
     m_temperCompensData[2] = m_buffer[4] | (int16_t)m_buffer[5] << 8;
     // Read pressure compensation registers.
     memset(&m_buffer[0], 0x00, PRESS_COMPENS_SIZE * 2);
-    if (m_interface.receiveData(kCompensP1, &m_buffer[0], 
+    if (m_interface.receiveData(kBmeCompensP1, &m_buffer[0], 
                                 PRESS_COMPENS_SIZE * 2)) {
-        return kErrCompensP;
+        return kBmeErrCompensP;
     }
     m_pressureCompensData[0] = m_buffer[0]  | (int16_t)m_buffer[1]  << 8;
     m_pressureCompensData[1] = m_buffer[2]  | (int16_t)m_buffer[3]  << 8;
@@ -154,13 +138,13 @@ Driver::Bme280ErrorCodes Driver::Bme280::_readCompensationData(void)
     m_pressureCompensData[7] = m_buffer[14] | (int16_t)m_buffer[15] << 8;
     m_pressureCompensData[8] = m_buffer[16] | (int16_t)m_buffer[17] << 8;
     // Read humidity compensation registers.
-    if (m_interface.receiveByte(kCompensH1, m_buffer[0])) {
-        return kErrCompensH1;
+    if (m_interface.receiveByte(kBmeCompensH1, m_buffer[0])) {
+        return kBmeErrCompensH1;
     }
     m_humidityCompensData[0] = m_buffer[0];
     memset(&m_buffer[0], 0x00, 7);
-    if (m_interface.receiveData(kCompensH2, &m_buffer[0], 7)) {
-        return kErrCompensH2;
+    if (m_interface.receiveData(kBmeCompensH2, &m_buffer[0], 7)) {
+        return kBmeErrCompensH2;
     }
     m_humidityCompensData[1] = (int16_t)m_buffer[1] << 8 | m_buffer[0];
     m_humidityCompensData[2] = m_buffer[2];
@@ -169,7 +153,7 @@ Driver::Bme280ErrorCodes Driver::Bme280::_readCompensationData(void)
                                                     ((m_buffer[4] & 0xF0) >> 4);
     m_humidityCompensData[5] = m_buffer[6];
     
-    return kNoError;
+    return kBmeNoError;
 }
 
 /**
@@ -181,7 +165,8 @@ void Driver::Bme280::_getTemperature(bool isKelvin)
 {
     // Read data from temperature registers.
     memset(&m_buffer[0], 0x00, 3);
-    if (m_interface.receiveData(kTemperatureMsb, &m_buffer[0], 3)) {
+    if (m_interface.receiveData(kBmeTemperatureMsb, &m_buffer[0], 3)) {
+        m_error = kBmeErrReadData;
         return;
     }
     m_temperCode = (int)m_buffer[0] << 12 | (int)m_buffer[1] << 4 |
@@ -215,7 +200,8 @@ void Driver::Bme280::_getTemperature(bool isKelvin)
 void Driver::Bme280::_getPressure(bool isMmhg)
 {
     // Read data from pressure registers.
-    if (m_interface.receiveData(kPressureMsb, &m_buffer[0], 3)) {
+    if (m_interface.receiveData(kBmePressureMsb, &m_buffer[0], 3)) {
+        m_error = kBmeErrReadData;
         return;
     }
     m_pressureCode = (int)m_buffer[0] << 12 | (int)m_buffer[1] << 4 |
@@ -264,7 +250,8 @@ void Driver::Bme280::_getPressure(bool isMmhg)
 void Driver::Bme280::_getHumidity(void)
 {
     // Read data from humidity registers.
-    if (m_interface.receiveData(kHumidityMsb, &m_buffer[0], 2)) {
+    if (m_interface.receiveData(kBmeHumidityMsb, &m_buffer[0], 2)) {
+        m_error = kBmeErrReadData;
         return;
     }
     m_humidityCode = (int)m_buffer[0] << 8 | m_buffer[1];
@@ -288,40 +275,68 @@ void Driver::Bme280::_getHumidity(void)
 /**
  * BME280 class constructor.
  **/
-Driver::Bme280::Bme280(void) : Device("BME280")
+Driver::Bme280::Bme280(void) : Device("BME280"),
+                               m_isInit(false),
+                               m_pressure(0.0f),
+                               m_temperature(0.0f),
+                               m_humidity(0.0f),
+                               m_tCompensCode(0.0f)
 {
-    // Zeroing all basic object fields.
-    m_pressure = m_temperature = m_humidity = 0.0;
-    m_tCompensCode = 0;
     // Prepare interface for communication.
     I2cParameters l_parameters = {
         0,
         s_kBme280Address,
-        kI2cNormalMode
+        kI2cNormalMode,
+        true
     };
-    m_interface.init(l_parameters);
-    
-    _init(kPatternIndoor);
+    // Initialize the sensor only if used interface was initialized
+    // successfully.
+    if (!m_interface.init(l_parameters)) {
+        _init(kBmePatternIndoor);
+    }
+    else {
+        m_error = kBmeErrInterfaceIsntInit;
+    }
 }
 
 /**
  * BME280 class constructor.
  * @param[i] - settings set to be assigned to the sensors registers.
  **/
-Driver::Bme280::Bme280(Bme280Patterns pattern) : Device("BME280")
+Driver::Bme280::Bme280(Bme280Patterns pattern) : Device("BME280"),
+                                                 m_isInit(false),
+                                                 m_pressure(0.0f),
+                                                 m_temperature(0.0f),
+                                                 m_humidity(0.0f),
+                                                 m_tCompensCode(0.0f)
 {
-    // Zeroing all basic object fields.
-    m_pressure = m_temperature = m_humidity = 0.0;
-    m_tCompensCode = 0;
     // Prepare interface for communication.
     I2cParameters l_parameters = {
         0,
         s_kBme280Address,
-        kI2cNormalMode
+        kI2cNormalMode,
+        true
     };
-    m_interface.init(l_parameters);
+    // Initialize the sensor only if used interface was initialized
+    // successfully.
+    if (m_interface.init(l_parameters)) {
+        _init(pattern);
+    }
+    else {
+        m_error = kBmeErrInterfaceIsntInit;
+    }
+}
 
-    _init(pattern);
+/**
+ * BME280 class destructor.
+ **/
+Driver::Bme280::~Bme280(void)
+{
+    // Turn the sensor into the sleep mode on object destruction.
+    if (m_isInit && m_error == kBmeNoError) {
+        toggle(false);
+        m_isInit = false;
+    }
 }
 
 /**
@@ -333,12 +348,48 @@ Driver::Bme280::Bme280(Bme280Patterns pattern) : Device("BME280")
 void Driver::Bme280::update(float& rTemperature, float& rPressure,
                                                               float& rHumidity)
 {
+    if (!m_isInit) {
+        rTemperature = rPressure = rHumidity = -1.0f;
+        m_error = kBmeIsntInit;
+        return;
+    }
+  
     // Get values.
     _getTemperature(false);
     _getPressure(true);
     _getHumidity();
 
-    temperature = m_temperature;
-    pressure = m_pressure;
-    humidity = m_humidity;
+    rTemperature = m_temperature;
+    rPressure = m_pressure;
+    rHumidity = m_humidity;
+}
+
+/**
+ * Sensor power on/off.
+ * @param[i] bool isPowerOn - flag that turns device into sleep mode or makes
+ *                            it awake.
+ * @return kBmeNoError       - no error;
+ *         kBmeIsntInit      - the sensor is not initialized;
+ *         kBmeErrReadData   - error during reading data from register;
+ *         kBmeErrWriteData  - error during sending data from register.
+ **/
+Driver::Bme280ErrorCodes Driver::Bme280::toggle(bool isPowerOn)
+{
+    if (!m_isInit) {
+        return (m_error = kBmeIsntInit);
+    }
+  
+    uint8_t l_regValue;
+    // Read 'CTRL_MEAS' register before change.
+    if (m_interface.receiveByte(kBmeCtrlMeas, l_regValue)) {
+        return kBmeErrReadData;
+    }
+    // Change register work mode bit according to input state.
+    l_regValue = (isPowerOn ? l_regValue | 0x03 : l_regValue & 0xFFFC);
+    isPowerOn == true ? l_regValue |= 0x03 : l_regValue &= 0xFFFC;
+    if (m_interface.sendByte(kBmeCtrlMeas, l_regValue)) {
+        return kBmeErrWriteData;
+    }
+
+    return kBmeNoError;
 }

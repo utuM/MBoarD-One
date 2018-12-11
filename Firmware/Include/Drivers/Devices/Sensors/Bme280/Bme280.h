@@ -1,6 +1,6 @@
 /**
  *  @file       Bme280.h (header file)
- *  @version    1.0
+ *  @version    1.0.2
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       10.12.2018 (release)
  *  @brief      BME280 sensor class.
@@ -9,6 +9,14 @@
  *              To start interactions with sensor just need to initialize the
  *              class object and call 'update(...)' method every time when
  *              needed.
+ *  @updates    New in current version:
+ *              + Changed all enumeration fields to make them unique in 'Driver'
+ *                namespace.
+ *              + Moved 'toggle()' method from the private to public area to
+ *                make it enable for turn on/off sensor.
+ *              + Placed 'toggle()' method calling inside the class desctructor
+ *                to turn sensor into sleep mode.
+ *              + Added 'm_error' field to detect and log class object state.
  **/
 
 #ifndef __SENSORS_BME280_H
@@ -45,181 +53,188 @@ namespace Driver {
      **/
     enum Bme280Registers : uint8_t {
         // Current pressure data registers.
-        kPressureMsb       = 0xF7,
-        kPressureLsb       = 0xF8,
-        kPressureXlsb      = 0xF9,
+        kBmePressureMsb  	   = 0xF7,
+        kBmePressureLsb  	   = 0xF8,
+        kBmePressureXlsb 	   = 0xF9,
         // Current temperature data registers.
-        kTemperatureMsb    = 0xFA,
-        kTemperatureLsb    = 0xFB,
-        kTemperatureXlsb   = 0xFC,
+        kBmeTemperatureMsb     = 0xFA,
+        kBmeTemperatureLsb     = 0xFB,
+        kBmeTemperatureXlsb    = 0xFC,
         // Current humidity data registers.
-        kHumidityMsb       = 0xFD,
-        kHumidityLsb       = 0xFE,  
+        kBmeHumidityMsb        = 0xFD,
+        kBmeHumidityLsb        = 0xFE,  
         // Device ID number register.
-        kIdNumber          = 0xD0,
+        kBmeIdNumber	       = 0xD0,
         // Device reset register.
-        kReset             = 0xE0,
+        kBmeReset     	       = 0xE0,
         // Humidity measurement oversampling register.
-        kCtrlHum           = 0xF2,
+        kBmeCtrlHum            = 0xF2,
         // Device status register.
-        kStatus            = 0xF3,
+        kBmeStatus    	       = 0xF3,
         // Device configuration.
-        kCtrlMeas          = 0xF4,
-        kConfig            = 0xF5,
+        kBmeCtrlMeas           = 0xF4,
+        kBmeConfig             = 0xF5,
         // Temperature compensation data registers.
-        kCompensT1         = 0x88,
-        kCompensT2         = 0x8A,
-        kCompensT3         = 0x8C,
+        kBmeCompensT1 	       = 0x88,
+        kBmeCompensT2 	       = 0x8A,
+        kBmeCompensT3 	       = 0x8C,
         // Pressure compensation data registers.
-        kCompensP1         = 0x8E,
-        kCompensP2         = 0x90,
-        kCompensP3         = 0x92,
-        kCompensP4         = 0x94,
-        kCompensP5         = 0x96,
-        kCompensP6         = 0x98,
-        kCompensP7         = 0x9A,
-        kCompensP8         = 0x9C,
-        kCompensP9         = 0x9E,
+        kBmeCompensP1 	       = 0x8E,
+        kBmeCompensP2 	       = 0x90,
+        kBmeCompensP3 	       = 0x92,
+        kBmeCompensP4 	       = 0x94,
+        kBmeCompensP5 	       = 0x96,
+        kBmeCompensP6 	       = 0x98,
+        kBmeCompensP7 	       = 0x9A,
+        kBmeCompensP8          = 0x9C,
+        kBmeCompensP9 	       = 0x9E,
         // Humidity compensation data registers.
-        kCompensH1         = 0xA1,
-        kCompensH2         = 0xE1,
-        kCompensH3         = 0xE3,
-        kCompensH4         = 0xE4,
-        kCompensH5         = 0xE5,
-        kCompensH6         = 0xE7
+        kBmeCompensH1 	       = 0xA1,
+        kBmeCompensH2 	       = 0xE1,
+        kBmeCompensH3 	       = 0xE3,
+        kBmeCompensH4 	       = 0xE4,
+        kBmeCompensH5 	       = 0xE5,
+        kBmeCompensH6 	       = 0xE7
     };
 	
     /**
      * BME280 data update rates values.
      **/
     enum Bme280Datarates {
-        kDataRate10Ms = 0xC0,
-        kDataRate20Ms = 0xE0
+        kBmeDataRate10Ms = 0xC0,
+        kBmeDataRate20Ms = 0xE0
     };
 	
     /**
      * BME280 humidity data oversampling coefficient values.
      **/
     enum Bme280HumidityCoef {
-        kHumidOrsSkipped = 0x00,
-        kHumidOrs1       = 0x01,
-        kHumidOrs2       = 0x02,
-        kHumidOrs4       = 0x03,
-        kHumidOrs8       = 0x04,
-        kHumidOrs16      = 0x05,
+        kBmeHumidOrsSkipped = 0x00,
+        kBmeHumidOrs1       = 0x01,
+        kBmeHumidOrs2 	    = 0x02,
+        kBmeHumidOrs4 	    = 0x03,
+        kBmeHumidOrs8 	    = 0x04,
+        kBmeHumidOrs16 	    = 0x05,
     };
 	
     /**
      * BME280 pressure data oversampling coefficient values.
      **/
     enum Bme280PressureCoef {
-        kPressOrsSkipped = 0x00,
-        kPressOrs1       = 0x04,
-        kPressOrs2       = 0x08,
-        kPressOrs4       = 0x0C,
-        kPressOrs8       = 0x10,
-        kPressOrs16      = 0x14,
+        kBmePressOrsSkipped = 0x00,
+        kBmePressOrs1       = 0x04,
+        kBmePressOrs2 	    = 0x08,
+        kBmePressOrs4 	    = 0x0C,
+        kBmePressOrs8 	    = 0x10,
+        kBmePressOrs16      = 0x14,
     };
     /**
      * BME280 temperature data oversampling coefficient values.
      **/
     enum Bme280TemperatureCoef {
-        kTempOrsSkipped  = 0x00,
-        kTempOrs1        = 0x20,
-        kTempOrs2        = 0x40,
-        kTempOrs4        = 0x60,
-        kTempOrs8        = 0x80,
-        kTempOrs16       = 0xA0,
+        kBmeTempOrsSkipped   = 0x00,
+        kBmeTempOrs1         = 0x20,
+        kBmeTempOrs2 	     = 0x40,
+        kBmeTempOrs4 	     = 0x60,
+        kBmeTempOrs8 	     = 0x80,
+        kBmeTempOrs16 	     = 0xA0,
     };
     /**
      * BME280 work mode.
      **/
     enum Bme280Workmode {
-        kSleepMode       = 0x00,
-        kForcedMode      = 0x01,
-        kForcedModeCopy  = 0x02,
-        kNormalMode      = 0x03
+        kBmeSleepMode       = 0x00,
+        kBmeForcedMode      = 0x01,
+        kBmeForcedModeCopy  = 0x02,
+        kBmeNormalMode      = 0x03
     };
 	/**
      * BME280 stand-by duration between neighbour data in normal mode
 	 * values.
      **/
     enum Bme280Standby {
-        kStandby05Ms     = 0x00,
-        kStandby625Ms    = 0x20,
-        kStandby125Ms    = 0x40,
-        kStandby250Ms    = 0x60,
-        kStandby500Ms    = 0x80,
-        kStandby1000Ms   = 0xA0,
-        kStandby10Ms     = 0xC0,
-        kStandby20Ms     = 0xE0
+        kBmeStandby05Ms     = 0x00,
+        kBmeStandby625Ms    = 0x20,
+        kBmeStandby125Ms    = 0x40,
+        kBmeStandby250Ms    = 0x60,
+        kBmeStandby500Ms    = 0x80,
+        kBmeStandby1000Ms   = 0xA0,
+        kBmeStandby10Ms     = 0xC0,
+        kBmeStandby20Ms     = 0xE0
     };
     /**
      * BME280 filter coefficient values.
      **/
     enum Bme280Filter {
-        kFilterOff       = 0x00,
-        kFilter2         = 0x04,
-        kFilter4         = 0x08,
-        kFilter8         = 0x0C,
-        kFilter16        = 0x10
+        kBmeFilterOff       = 0x00,
+        kBmeFilter2         = 0x04,
+        kBmeFilter4         = 0x08,
+        kBmeFilter8         = 0x0C,
+        kBmeFilter16        = 0x10
     };
     /**
      * BME280 settings template.
      **/
     enum Bme280Patterns {
-        kPatternWeather  = 0x01,
-        kPatternHumidity,
-        kPatternIndoor,
-        kPatternGaming
+        kBmePatternWeather  = 0x01,
+        kBmePatternHumidity,
+        kBmePatternIndoor,
+        kBmePatternGaming
     };
     /**
      * BME280 possible errors.
      **/
     enum Bme280ErrorCodes {
-        kNoError               = 0x00, ///< No error.
-        kErrCtrlMeasData               ///< An error during sending settings
+        kBmeNoError            = 0x00, ///< No error.
+        kBmeIsntInit,                  ///< The sensor wasn't setting up
+                                       ///  correctly.
+        kBmeErrInterfaceIsntInit,      ///< The used interface wasn't
+                                       ///  initialized correctly.
+		kBmeErrCtrlMeasData,           ///< An error during sending settings
                                        ///  to the 'CTRL_MEAS' register.
-        kErrCtrlHumData,               ///< An error during sending settings
+        kBmeErrCtrlHumData,            ///< An error during sending settings
                                        ///  to the 'CTRL_HUM' register.
-        kErrCtrlConfigData,            ///< An error during sending settings
+        kBmeErrCtrlConfigData,         ///< An error during sending settings
                                        ///  to the 'CTRL_CONFIG' register.
-        kErrId,                        ///< Received ID number is not equal
+        kBmeErrId,                     ///< Received ID number is not equal
                                        ///  to default one.
-        kErrCompensT,                  ///< An error during reading
+        kBmeErrCompensT,               ///< An error during reading
                                        ///  temperature compensation data.
-        kErrCompensP,                  ///< An error during reading
+        kBmeErrCompensP,               ///< An error during reading
                                        ///  pressure compensation data.
-        kErrCompensH1,                 ///< An error during reading
+        kBmeErrCompensH1,              ///< An error during reading
                                        ///  first part of humidity compensation
                                        ///  data.  
-        kErrCompensH2,                 ///< An error during reading
+        kBmeErrCompensH2,              ///< An error during reading
                                        ///  second part of humidity 
                                        ///  compensation data.  
-        kErrReadData,                  ///< An error occured on register's 
+        kBmeErrReadData,               ///< An error occured on register's 
                                        ///  value reading.
-        kErrWriteData                  ///< An error occured on register's 
+        kBmeErrWriteData               ///< An error occured on register's 
                                        ///  value writing.
     };
     
     class Bme280 : public Device<I2c> {
         private:
+            bool m_isInit;                        ///< Successful initialization
+                                                  ///  flag.
             uint8_t m_buffer[BME280_BUFFER_SIZE]; ///< TX & RX buffer.
             uint8_t m_bufferSize;                 ///< Size of buffer.
             // Compensation data buffers.
             int16_t m_pressureCompensData[PRESS_COMPENS_SIZE];
             int16_t m_temperCompensData[TEMPR_COMPENS_SIZE];
             int16_t m_humidityCompensData[HUMID_COMPENS_SIZE];
-            int32_t m_pressureCode; ///< Calculated pressure code.
-            int32_t m_temperCode;   ///< Calculated temperature code.
-            int32_t m_humidityCode; ///< Calculated humidity code.
-            int32_t m_tCompensCode; ///< Temperature compensation code.
-            float m_pressure;       ///< Current pressure value.
-            float m_temperature;    ///< Current temperatus value.
-            float m_humidity;       ///< Current humidity value.
+            int32_t m_pressureCode;   ///< Calculated pressure code.
+            int32_t m_temperCode;     ///< Calculated temperature code.
+            int32_t m_humidityCode;   ///< Calculated humidity code.
+            int32_t m_tCompensCode;   ///< Temperature compensation code.
+            float m_pressure;         ///< Current pressure value.
+            float m_temperature;      ///< Current temperatus value.
+            float m_humidity;         ///< Current humidity value.
+
+            Bme280ErrorCodes m_error; ///< Current error.
             
             Bme280ErrorCodes _init(Bme280Patterns pattern);
-            Bme280ErrorCodes _toggle(bool isPowerOn);
             Bme280ErrorCodes _readCompensationData(void);
             void _getTemperature(bool isCelsius);
             void _getPressure(bool isMmhg);
@@ -229,11 +244,15 @@ namespace Driver {
             // Contructors and desctructor.
             Bme280(void);
             Bme280(Bme280Patterns pattern);
-            ~Bme280(void) { /* Leave clean. */ }
+            ~Bme280(void);
+            
+            // Getter.
+            uint8_t getError(void) { return (uint8_t)m_error; }
             
 			// Basic method.
             void update(float& rTemperature, float& hPressure,
                                                              float& rHumidity);
+            Bme280ErrorCodes toggle(bool isPowerOn);
     };
 }
 
