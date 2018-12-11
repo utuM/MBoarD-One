@@ -1,6 +1,6 @@
 /**
  *  @file       Bme280.h (header file)
- *  @version    1.0.2
+ *  @version    1.0.2.1
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       10.12.2018 (release)
  *  @brief      BME280 sensor class.
@@ -53,9 +53,9 @@ namespace Driver {
      **/
     enum Bme280Registers : uint8_t {
         // Current pressure data registers.
-        kBmePressureMsb  	   = 0xF7,
-        kBmePressureLsb  	   = 0xF8,
-        kBmePressureXlsb 	   = 0xF9,
+        kBmePressureMsb        = 0xF7,
+        kBmePressureLsb        = 0xF8,
+        kBmePressureXlsb       = 0xF9,
         // Current temperature data registers.
         kBmeTemperatureMsb     = 0xFA,
         kBmeTemperatureLsb     = 0xFB,
@@ -64,37 +64,37 @@ namespace Driver {
         kBmeHumidityMsb        = 0xFD,
         kBmeHumidityLsb        = 0xFE,  
         // Device ID number register.
-        kBmeIdNumber	       = 0xD0,
+        kBmeIdNumber           = 0xD0,
         // Device reset register.
-        kBmeReset     	       = 0xE0,
+        kBmeReset              = 0xE0,
         // Humidity measurement oversampling register.
         kBmeCtrlHum            = 0xF2,
         // Device status register.
-        kBmeStatus    	       = 0xF3,
+        kBmeStatus             = 0xF3,
         // Device configuration.
         kBmeCtrlMeas           = 0xF4,
         kBmeConfig             = 0xF5,
         // Temperature compensation data registers.
-        kBmeCompensT1 	       = 0x88,
-        kBmeCompensT2 	       = 0x8A,
-        kBmeCompensT3 	       = 0x8C,
+        kBmeCompensT1          = 0x88,
+        kBmeCompensT2          = 0x8A,
+        kBmeCompensT3          = 0x8C,
         // Pressure compensation data registers.
-        kBmeCompensP1 	       = 0x8E,
-        kBmeCompensP2 	       = 0x90,
-        kBmeCompensP3 	       = 0x92,
-        kBmeCompensP4 	       = 0x94,
-        kBmeCompensP5 	       = 0x96,
-        kBmeCompensP6 	       = 0x98,
-        kBmeCompensP7 	       = 0x9A,
+        kBmeCompensP1          = 0x8E,
+        kBmeCompensP2          = 0x90,
+        kBmeCompensP3          = 0x92,
+        kBmeCompensP4          = 0x94,
+        kBmeCompensP5          = 0x96,
+        kBmeCompensP6          = 0x98,
+        kBmeCompensP7          = 0x9A,
         kBmeCompensP8          = 0x9C,
-        kBmeCompensP9 	       = 0x9E,
+        kBmeCompensP9          = 0x9E,
         // Humidity compensation data registers.
-        kBmeCompensH1 	       = 0xA1,
-        kBmeCompensH2 	       = 0xE1,
-        kBmeCompensH3 	       = 0xE3,
-        kBmeCompensH4 	       = 0xE4,
-        kBmeCompensH5 	       = 0xE5,
-        kBmeCompensH6 	       = 0xE7
+        kBmeCompensH1          = 0xA1,
+        kBmeCompensH2          = 0xE1,
+        kBmeCompensH3          = 0xE3,
+        kBmeCompensH4          = 0xE4,
+        kBmeCompensH5          = 0xE5,
+        kBmeCompensH6          = 0xE7
     };
 	
     /**
@@ -109,24 +109,24 @@ namespace Driver {
      * BME280 humidity data oversampling coefficient values.
      **/
     enum Bme280HumidityCoef {
-        kBmeHumidOrsSkipped = 0x00,
-        kBmeHumidOrs1       = 0x01,
-        kBmeHumidOrs2 	    = 0x02,
-        kBmeHumidOrs4 	    = 0x03,
-        kBmeHumidOrs8 	    = 0x04,
-        kBmeHumidOrs16 	    = 0x05,
+        kBmeHumidOrsSkipped  = 0x00,
+        kBmeHumidOrs1        = 0x01,
+        kBmeHumidOrs2        = 0x02,
+        kBmeHumidOrs4        = 0x03,
+        kBmeHumidOrs8        = 0x04,
+        kBmeHumidOrs16       = 0x05,
     };
 	
     /**
      * BME280 pressure data oversampling coefficient values.
      **/
     enum Bme280PressureCoef {
-        kBmePressOrsSkipped = 0x00,
-        kBmePressOrs1       = 0x04,
-        kBmePressOrs2 	    = 0x08,
-        kBmePressOrs4 	    = 0x0C,
-        kBmePressOrs8 	    = 0x10,
-        kBmePressOrs16      = 0x14,
+        kBmePressOrsSkipped  = 0x00,
+        kBmePressOrs1        = 0x04,
+        kBmePressOrs2        = 0x08,
+        kBmePressOrs4        = 0x0C,
+        kBmePressOrs8        = 0x10,
+        kBmePressOrs16       = 0x14,
     };
     /**
      * BME280 temperature data oversampling coefficient values.
@@ -134,49 +134,49 @@ namespace Driver {
     enum Bme280TemperatureCoef {
         kBmeTempOrsSkipped   = 0x00,
         kBmeTempOrs1         = 0x20,
-        kBmeTempOrs2 	     = 0x40,
-        kBmeTempOrs4 	     = 0x60,
-        kBmeTempOrs8 	     = 0x80,
-        kBmeTempOrs16 	     = 0xA0,
+        kBmeTempOrs2         = 0x40,
+        kBmeTempOrs4         = 0x60,
+        kBmeTempOrs8         = 0x80,
+        kBmeTempOrs16        = 0xA0,
     };
     /**
      * BME280 work mode.
      **/
     enum Bme280Workmode {
-        kBmeSleepMode       = 0x00,
-        kBmeForcedMode      = 0x01,
-        kBmeForcedModeCopy  = 0x02,
-        kBmeNormalMode      = 0x03
+        kBmeSleepMode        = 0x00,
+        kBmeForcedMode       = 0x01,
+        kBmeForcedModeCopy   = 0x02,
+        kBmeNormalMode       = 0x03
     };
 	/**
      * BME280 stand-by duration between neighbour data in normal mode
 	 * values.
      **/
     enum Bme280Standby {
-        kBmeStandby05Ms     = 0x00,
-        kBmeStandby625Ms    = 0x20,
-        kBmeStandby125Ms    = 0x40,
-        kBmeStandby250Ms    = 0x60,
-        kBmeStandby500Ms    = 0x80,
-        kBmeStandby1000Ms   = 0xA0,
-        kBmeStandby10Ms     = 0xC0,
-        kBmeStandby20Ms     = 0xE0
+        kBmeStandby05Ms      = 0x00,
+        kBmeStandby625Ms     = 0x20,
+        kBmeStandby125Ms     = 0x40,
+        kBmeStandby250Ms     = 0x60,
+        kBmeStandby500Ms     = 0x80,
+        kBmeStandby1000Ms    = 0xA0,
+        kBmeStandby10Ms      = 0xC0,
+        kBmeStandby20Ms      = 0xE0
     };
     /**
      * BME280 filter coefficient values.
      **/
     enum Bme280Filter {
-        kBmeFilterOff       = 0x00,
-        kBmeFilter2         = 0x04,
-        kBmeFilter4         = 0x08,
-        kBmeFilter8         = 0x0C,
-        kBmeFilter16        = 0x10
+        kBmeFilterOff        = 0x00,
+        kBmeFilter2          = 0x04,
+        kBmeFilter4          = 0x08,
+        kBmeFilter8          = 0x0C,
+        kBmeFilter16         = 0x10
     };
     /**
      * BME280 settings template.
      **/
     enum Bme280Patterns {
-        kBmePatternWeather  = 0x01,
+        kBmePatternWeather   = 0x01,
         kBmePatternHumidity,
         kBmePatternIndoor,
         kBmePatternGaming
@@ -190,7 +190,7 @@ namespace Driver {
                                        ///  correctly.
         kBmeErrInterfaceIsntInit,      ///< The used interface wasn't
                                        ///  initialized correctly.
-		kBmeErrCtrlMeasData,           ///< An error during sending settings
+        kBmeErrCtrlMeasData,           ///< An error during sending settings
                                        ///  to the 'CTRL_MEAS' register.
         kBmeErrCtrlHumData,            ///< An error during sending settings
                                        ///  to the 'CTRL_HUM' register.
@@ -249,9 +249,9 @@ namespace Driver {
             // Getter.
             uint8_t getError(void) { return (uint8_t)m_error; }
             
-			// Basic method.
+            // Basic method.
             void update(float& rTemperature, float& hPressure,
-                                                             float& rHumidity);
+                                                            float& rHumidity);
             Bme280ErrorCodes toggle(bool isPowerOn);
     };
 }

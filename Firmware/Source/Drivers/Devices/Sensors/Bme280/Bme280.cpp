@@ -1,6 +1,6 @@
 /**
  *  @file       Bme280.h (module file)
- *  @version    1.0.2
+ *  @version    1.0.2.1
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       10.12.2018 (release)
  *  @brief      BME280 sensor class.
@@ -382,14 +382,14 @@ Driver::Bme280ErrorCodes Driver::Bme280::toggle(bool isPowerOn)
     uint8_t l_regValue;
     // Read 'CTRL_MEAS' register before change.
     if (m_interface.receiveByte(kBmeCtrlMeas, l_regValue)) {
-        return kBmeErrReadData;
+        return (m_error = kBmeErrReadData);
     }
     // Change register work mode bit according to input state.
     l_regValue = (isPowerOn ? l_regValue | 0x03 : l_regValue & 0xFFFC);
     isPowerOn == true ? l_regValue |= 0x03 : l_regValue &= 0xFFFC;
     if (m_interface.sendByte(kBmeCtrlMeas, l_regValue)) {
-        return kBmeErrWriteData;
+        return (m_error = kBmeErrWriteData);
     }
 
-    return kBmeNoError;
+    return (m_error = kBmeNoError);
 }
