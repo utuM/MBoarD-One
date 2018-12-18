@@ -1,10 +1,16 @@
 /**
  *  @file       Ina219.h (header file)
- *  @version    0.1
+ *  @version    1.0
  *  @author     utuM (Kostyantyn Komarov)
- *  @date       12.12.2018 (implementation)
- *  @brief      
- *
+ *  @date       18.12.2018 (release)
+ *  @brief      INA219 sensor class.
+ *              Class provides to read current and voltage values from the 
+ *              INA219 sensor. Also, driver provides communication between
+ *              target MCU and the sensor via I2C. 
+ *              To start communication with the sensor, need to define class
+ *              object with input measurement mode value.
+ *              To get the values just need to call the 'update(..)' method
+ *              using variable references as input parameters.
  **/
 
 #ifndef __SENSORS_INA219_H
@@ -15,8 +21,18 @@
 #include "I2c.h"
 
 namespace Driver {
-    const uint8_t s_kIna219Address = 0x40; ///< Default INA219 address on 
-                                           ///  I2C bus.
+    const uint8_t s_kIna219Address = 0x40 << 1;  ///< Default INA219 address on 
+                                                 ///  I2C bus.
+    const uint8_t s_kInaBusVoltageLsb = 4;       ///< Amount of mV that is 
+                                                 ///  carried by LSB.
+    const uint16_t s_kInaShuntResistorOhm = 100; ///< Shunt resistor value in
+                                                 ///  Ohms. 
+    const float s_kInaMaxExpectedCurrentA = 2;   ///< Maximal value of current
+                                                 ///  expected in the circuit in
+                                                 ///  Ampers.
+    const float s_kInaFixedScale = 0.04096f;     ///< An internal fixed value
+                                                 ///  used to ensure scaling is
+                                                 ///  maintained properly.
 
     /**
      * INA219 sensor registers.
@@ -110,12 +126,15 @@ namespace Driver {
     
     class Ina219 : public Device<I2c> {
         private:
-            bool m_isInit;            ///< Successful initialization flag.
-            float m_voltage;          ///< Voltage value.
-            float m_current;          ///< Current value.
-            Ina219ErrorCodes m_error; ///< Current error.
+            bool m_isInit;             ///< Successful initialization flag.
+            Ina219ModeSettings m_mode; ///< Current measurement mode.
+            float m_voltage;           ///< Voltage value.
+            float m_currentLsb;        ///< Calculated current LSB value.
+            float m_current;           ///< Current value.
+            Ina219ErrorCodes m_error;  ///< Current error.
             
-            Ina219ErrorCodes _init(void);
+            Ina219ErrorCodes _init(Ina219ModeSettings mode);
+            Ina219ErrorCodes _calibration(void);
             
         public:
             // Contructors and desctructor.
