@@ -1,6 +1,6 @@
 /**
  *  @file       Ina219.h (header file)
- *  @version    1.0
+ *  @version    1.0.1
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       18.12.2018 (release)
  *  @brief      INA219 sensor class.
@@ -33,6 +33,9 @@ namespace Driver {
     const float s_kInaFixedScale = 0.04096f;     ///< An internal fixed value
                                                  ///  used to ensure scaling is
                                                  ///  maintained properly.
+    const uint16_t s_kInaMaxCurrentCode = 32768; ///< Maximal possible code raw
+                                                 ///  code value for current
+                                                 ///  measurement.
 
     /**
      * INA219 sensor registers.

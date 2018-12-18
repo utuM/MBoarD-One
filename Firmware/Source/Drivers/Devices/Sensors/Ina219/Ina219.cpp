@@ -1,6 +1,6 @@
 /**
  *  @file       Ina219.cpp (module file)
- *  @version    1.0
+ *  @version    1.0.1
  *  @author     utuM (Kostyantyn Komarov)
  *  @date       18.12.2018 (release)
  *  @brief      INA219 sensor class.
@@ -39,9 +39,7 @@ Driver::Ina219ErrorCodes Driver::Ina219::_init(Ina219ModeSettings mode)
 {
     uint16_t l_settings = 0;
     uint8_t l_buffer[2] = { 0 };
-	
-    // Power on device.
-    toggle(true);
+    
     // Reset the sensor.
     PUSH_16BIT((uint16_t)kInaReset, l_buffer);
     if (m_interface.sendData(kInaConfiguration, l_buffer, 2)) {
@@ -70,7 +68,7 @@ Driver::Ina219ErrorCodes Driver::Ina219::_calibration(void)
     uint8_t l_buffer[2] = { 0 };
     
     // Calculate new calibration value.
-    m_currentLsb = s_kInaMaxExpectedCurrentA / 32768.0;
+    m_currentLsb = s_kInaMaxExpectedCurrentA / (float)s_kInaMaxCurrentCode;
     uint16_t l_calibration = trunc(s_kInaFixedScale /
                                    (m_currentLsb * s_kInaShuntResistorOhm));
     // Send calculated calibration value to the properly register.
@@ -165,6 +163,10 @@ Driver::Ina219ErrorCodes Driver::Ina219::update(float& rVoltage, float& rCurrent
  **/
 Driver::Ina219ErrorCodes Driver::Ina219::toggle(bool isTurnedOn)
 {  
+    if (!m_isInit) {
+        return (m_error = kInaErrIsntInit);
+    }
+  
     uint16_t l_value = 0;
     uint8_t l_buffer[2] = { 0 };
     // Read current value from the configuration register.
