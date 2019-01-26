@@ -262,7 +262,7 @@ bool Driver::Uart::sendData(uint8_t reg, uint8_t* pData, const uint16_t size)
   * Byte reading process (reading from internal object RX-buffer).
   * @param[i] reg    - can be ignored.
   * @param[i] rValue - reference to outer byte variable need to be filled.
-  * @param[i] size  - amount of bytes to be sent.
+  * @param[i] size   - amount of bytes to be sent.
   * @return true  - object hasn't been initialized properly or failed sending;
   *         false - successful reading.
   **/
