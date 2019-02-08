@@ -33,12 +33,12 @@ namespace Driver {
 		kCcs811SwReset       = 0xFF
 	};
 	
-	enum kCcs811StatusBits : uint8_t {
+	enum Ccs811StatusBits : uint8_t {
 		kCcs811Error     = 0x01,
 		kCcs811DataReady = 0x08
 	};
 	
-	enum kCcs811MeasModeBits : uint8_t {
+	enum Ccs811MeasModeBits : uint8_t {
 		kCcs811PowerSave       = 0x00,
 		kCcs811IntThresholds   = 0x04,
 		kCcs811IntDataReady    = 0x08,
@@ -46,6 +46,11 @@ namespace Driver {
 		kCcs811PulseHeat10s    = 0x20,
 		kCcs811LowPower60s     = 0x30,
 		kCcs811ConstPower250ms = 0x40
+	};
+	
+	enum Ccs811ErrorCodes : uint8_t {
+		kCcs811NoError = 0x00,
+		kCcs811ErrInterfaceIsntInit
 	};
 	
     class Ccs811 : public Device<I2c> {
