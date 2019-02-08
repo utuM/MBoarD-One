@@ -1,0 +1,246 @@
+EESchema Schematic File Version 4
+EELAYER 26 0
+EELAYER END
+$Descr A2 23386 16535
+encoding utf-8
+Sheet 1 1
+Title "MBoard One"
+Date ""
+Rev "0.1"
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L MCU_ST_STM32H7:STM32H743ZITx U?
+U 1 1 5C5D4170
+P 10800 8350
+F 0 "U?" H 10750 4664 50  0000 C CNN
+F 1 "STM32H743ZITx" H 10750 4573 50  0000 C CNN
+F 2 "Package_QFP:LQFP-144_20x20mm_P0.5mm" H 9700 4950 50  0001 R CNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00387108.pdf" H 10800 8350 50  0001 C CNN
+	1    10800 8350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Sensor:BME280 U?
+U 1 1 5C5D41CA
+P 15100 5550
+F 0 "U?" V 14533 5550 50  0000 C CNN
+F 1 "BME280" V 14624 5550 50  0000 C CNN
+F 2 "Package_LGA:Bosch_LGA-8_2.5x2.5mm_P0.65mm_ClockwisePinNumbering" H 15100 5350 50  0001 C CNN
+F 3 "https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BME280_DS001-11.pdf" H 15100 5350 50  0001 C CNN
+	1    15100 5550
+	0    1    1    0   
+$EndComp
+$Comp
+L Sensor_Gas:CCS811 U?
+U 1 1 5C5D429C
+P 17450 5550
+F 0 "U?" H 17450 6228 50  0000 C CNN
+F 1 "CCS811" H 17450 6137 50  0000 C CNN
+F 2 "Package_LGA:AMS_LGA-10-1EP_2.7x4mm_P0.6mm" H 17450 4950 50  0001 C CNN
+F 3 "http://ams.com/eng/Products/Environmental-Sensors/Air-Quality-Sensors/CCS811" H 17450 5350 50  0001 C CNN
+	1    17450 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Audio:PCM5102 U?
+U 1 1 5C5D4338
+P 19950 5550
+F 0 "U?" H 19950 6328 50  0000 C CNN
+F 1 "PCM5102" H 19950 6237 50  0000 C CNN
+F 2 "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm" H 19900 6300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/pcm5102.pdf" H 19900 6300 50  0001 C CNN
+	1    19950 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Interface_USB:FT232H U?
+U 1 1 5C5D445B
+P 19950 8550
+F 0 "U?" H 19950 10228 50  0000 C CNN
+F 1 "FT232H" H 19950 10137 50  0000 C CNN
+F 2 "" H 19950 8550 50  0001 C CNN
+F 3 "http://www.ftdichip.com/Products/ICs/FT232H.htm" H 19950 8550 50  0001 C CNN
+	1    19950 8550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Memory_Flash:AT25SF081-SSHD-X U?
+U 1 1 5C5D45A0
+P 17200 7550
+F 0 "U?" H 17841 7596 50  0000 L CNN
+F 1 "AT25SF081-SSHD-X" H 17841 7505 50  0000 L CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 17200 6950 50  0001 C CNN
+F 3 "https://www.adestotech.com/wp-content/uploads/DS-AT25SF081_045.pdf" H 17200 7550 50  0001 C CNN
+	1    17200 7550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Sensor_Motion:MPU-9250 U?
+U 1 1 5C5D4614
+P 15300 9700
+F 0 "U?" H 15300 8714 50  0000 C CNN
+F 1 "MPU-9250" H 15300 8623 50  0000 C CNN
+F 2 "Sensor_Motion:InvenSense_QFN-24_3x3mm_P0.4mm" H 15300 8700 50  0001 C CNN
+F 3 "https://store.invensense.com/datasheets/invensense/MPU9250REV1.0.pdf" H 15300 9550 50  0001 C CNN
+	1    15300 9700
+	1    0    0    -1  
+$EndComp
+$Comp
+L BH1750FVI-TR:BH1750FVI-TR U?
+U 1 1 5C5D4AC1
+P 15450 3800
+F 0 "U?" H 15450 4267 50  0000 C CNN
+F 1 "BH1750FVI-TR" H 15450 4176 50  0000 C CNN
+F 2 "SOTFL50P300X75-6N" H 15450 3800 50  0001 L BNN
+F 3 "BH1750FVI-TR" H 15450 3800 50  0001 L BNN
+F 4 "SMD-6 Rohm" H 15450 3800 50  0001 L BNN "Field4"
+F 5 "Rohm" H 15450 3800 50  0001 L BNN "Field5"
+F 6 "None" H 15450 3800 50  0001 L BNN "Field6"
+F 7 "Unavailable" H 15450 3800 50  0001 L BNN "Field7"
+F 8 "Light to Digital Ambient Light Sensor Digital O/P 1lux to 65535lux 6-Pin WSOF Embossed T/R" H 15450 3800 50  0001 L BNN "Field8"
+	1    15450 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L TEA5767:TEA5767 U?
+U 1 1 5C5D5010
+P 20150 3500
+F 0 "U?" H 20150 3500 50  0001 L BNN
+F 1 "TEA5767" H 20150 3500 50  0001 L BNN
+F 2 "TJ-102BC" H 20150 3500 50  0001 L BNN
+F 3 "Unavailable" H 20150 3500 50  0001 L BNN
+F 4 "" H 20150 3500 50  0001 L BNN "Field4"
+F 5 "None" H 20150 3500 50  0001 L BNN "Field5"
+F 6 "NXP Semiconductors" H 20150 3500 50  0001 L BNN "Field6"
+F 7 "None" H 20150 3500 50  0001 L BNN "Field7"
+F 8 "TEA5767" H 20150 3500 50  0001 L BNN "Field8"
+	1    20150 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L INA219:INA219 U?
+U 1 1 5C5D518D
+P 20700 2000
+F 0 "U?" H 20700 2867 50  0000 C CNN
+F 1 "INA219" H 20700 2776 50  0000 C CNN
+F 2 "SOT23-8" H 20700 2000 50  0001 L BNN
+F 3 "INA219" H 20700 2000 50  0001 L BNN
+F 4 "None" H 20700 2000 50  0001 L BNN "Field4"
+F 5 "Texas Instruments" H 20700 2000 50  0001 L BNN "Field5"
+F 6 "None" H 20700 2000 50  0001 L BNN "Field6"
+F 7 "Unavailable" H 20700 2000 50  0001 L BNN "Field7"
+F 8 "the ina219 is a high-side current shunt and power monitor with an i2c interface. the ina219 monitors both shunt drop ..." H 20700 2000 50  0001 L BNN "Field8"
+	1    20700 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L RF_Module:ESP-12F U?
+U 1 1 5C5D5238
+P 18700 2750
+F 0 "U?" H 18700 3728 50  0000 C CNN
+F 1 "ESP-12F" H 18700 3637 50  0000 C CNN
+F 2 "RF_Module:ESP-12E" H 18700 2750 50  0001 C CNN
+F 3 "http://wiki.ai-thinker.com/_media/esp8266/esp8266_series_modules_user_manual_v1.1.pdf" H 18350 2850 50  0001 C CNN
+	1    18700 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L MAX30100EFD_:MAX30100EFD+ U?
+U 1 1 5C5D5313
+P 21650 4950
+F 0 "U?" H 21650 5567 50  0000 C CNN
+F 1 "MAX30100EFD+" H 21650 5476 50  0000 C CNN
+F 2 "LGA14R80P2X7_560X280X130" H 21650 4950 50  0001 L BNN
+F 3 "MAX30100EFD+T" H 21650 4950 50  0001 L BNN
+F 4 "None" H 21650 4950 50  0001 L BNN "Field4"
+F 5 "Maxim Integrated" H 21650 4950 50  0001 L BNN "Field5"
+F 6 "None" H 21650 4950 50  0001 L BNN "Field6"
+F 7 "Unavailable" H 21650 4950 50  0001 L BNN "Field7"
+F 8 "Pulse Oximeter and Heart-Rate Sensor IC 14-Pin OLGA T/R" H 21650 4950 50  0001 L BNN "Field8"
+	1    21650 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L CODECODER-VS1053B_LQFP48_:CODECODER-VS1053B(LQFP48) U?
+U 1 1 5C5D5408
+P 16150 1650
+F 0 "U?" H 17691 1446 50  0000 L CNN
+F 1 "CODECODER-VS1053B(LQFP48)" H 17691 1355 50  0000 L CNN
+F 2 "LQFP48-0.5-7X7MM" H 16150 1650 50  0001 L BNN
+F 3 "Unavailable" H 16150 1650 50  0001 L BNN
+F 4 "VS1053B MP3/WAV/OGG/MIDI Player & Recorder _CODEC_ Chip" H 16150 1650 50  0001 L BNN "Field4"
+F 5 "LQFP-48 VLSI" H 16150 1650 50  0001 L BNN "Field5"
+F 6 "VLSI" H 16150 1650 50  0001 L BNN "Field6"
+F 7 "None" H 16150 1650 50  0001 L BNN "Field7"
+F 8 "VS1053B-L" H 16150 1650 50  0001 L BNN "Field8"
+	1    16150 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L VL53L0X:VL53L0X U?
+U 1 1 5C5D5520
+P 17150 4200
+F 0 "U?" H 17150 4865 50  0000 C CNN
+F 1 "VL53L0X" H 17150 4774 50  0000 C CNN
+F 2 "SENSOR_VL53L0X" H 17150 4200 50  0001 L BNN
+F 3 "Unavailable" H 17150 4200 50  0001 L BNN
+F 4 "World smallest Time-of-Flight _ToF_ ranging sensor" H 17150 4200 50  0001 L BNN "Field4"
+F 5 "None" H 17150 4200 50  0001 L BNN "Field5"
+F 6 "STMicroelectronics" H 17150 4200 50  0001 L BNN "Field6"
+F 7 "None" H 17150 4200 50  0001 L BNN "Field7"
+F 8 "VL53L0X" H 17150 4200 50  0001 L BNN "Field8"
+	1    17150 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L VL53L0X:VL53L0X U?
+U 1 1 5C5D55E9
+P 18700 4200
+F 0 "U?" H 18700 4865 50  0000 C CNN
+F 1 "VL53L0X" H 18700 4774 50  0000 C CNN
+F 2 "SENSOR_VL53L0X" H 18700 4200 50  0001 L BNN
+F 3 "Unavailable" H 18700 4200 50  0001 L BNN
+F 4 "World smallest Time-of-Flight _ToF_ ranging sensor" H 18700 4200 50  0001 L BNN "Field4"
+F 5 "None" H 18700 4200 50  0001 L BNN "Field5"
+F 6 "STMicroelectronics" H 18700 4200 50  0001 L BNN "Field6"
+F 7 "None" H 18700 4200 50  0001 L BNN "Field7"
+F 8 "VL53L0X" H 18700 4200 50  0001 L BNN "Field8"
+	1    18700 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L F-3188_CSR8645:F-3188_CSR8645 U?
+U 1 1 5C5D6029
+P 11300 3200
+F 0 "U?" H 11100 5037 60  0000 C CNN
+F 1 "F-3188_CSR8645" H 11100 4931 60  0000 C CNN
+F 2 "" H 11300 1500 60  0000 C CNN
+F 3 "" H 11300 1500 60  0000 C CNN
+	1    11300 3200
+	1    0    0    -1  
+$EndComp
+$Comp
+L ML8511:ML8511 IC?
+U 1 1 5C5D65A6
+P 17200 10600
+F 0 "IC?" H 17750 10865 50  0000 C CNN
+F 1 "ML8511" H 17750 10774 50  0000 C CNN
+F 2 "C-TQFN12-4.0X3.7-1.00" H 18150 10700 50  0001 L CNN
+F 3 "https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/ML8511_3-8-13.pdf" H 18150 10600 50  0001 L CNN
+F 4 "UV Sensor with Voltage Output" H 18150 10500 50  0001 L CNN "Description"
+F 5 "" H 18150 10400 50  0001 L CNN "Height"
+F 6 "LAPIS SEMICONDUCTOR" H 18150 10300 50  0001 L CNN "Manufacturer_Name"
+F 7 "ML8511" H 18150 10200 50  0001 L CNN "Manufacturer_Part_Number"
+F 8 "" H 18150 10100 50  0001 L CNN "RS Part Number"
+F 9 "" H 18150 10000 50  0001 L CNN "RS Price/Stock"
+F 10 "" H 18150 9900 50  0001 L CNN "Mouser Part Number"
+F 11 "" H 18150 9800 50  0001 L CNN "Mouser Price/Stock"
+	1    17200 10600
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
