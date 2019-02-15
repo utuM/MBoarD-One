@@ -1,0 +1,44 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# INA219
+#
+DEF INA219 U 0 40 Y Y 1 L N
+F0 "U" -400 801 50 H V L BNN
+F1 "INA219" -401 -801 50 H V L BNN
+F2 "SOT23-8" 0 0 50 H I L BNN
+F3 "INA219" 0 0 50 H I L BNN
+F4 "None" 0 0 50 H I L BNN
+F5 "Texas Instruments" 0 0 50 H I L BNN
+F6 "None" 0 0 50 H I L BNN
+F7 "Unavailable" 0 0 50 H I L BNN
+F8 "the ina219 is a high-side current shunt and power monitor with an i2c interface. the ina219 monitors both shunt drop ..." 0 0 50 H I L BNN
+DRAW
+P 2 0 0 10 -400 700 400 700 N
+P 2 0 0 10 400 700 400 400 N
+P 2 0 0 10 400 400 400 -500 N
+P 2 0 0 10 400 -500 400 -700 N
+P 2 0 0 10 400 -700 -400 -700 N
+P 2 0 0 10 -400 -700 -400 -500 N
+P 2 0 0 10 -400 -500 -400 400 N
+P 2 0 0 10 -400 400 -400 700 N
+P 2 0 0 10 -400 400 400 400 N
+P 2 0 0 10 -400 -500 400 -500 N
+T 0 -150 601 50 0 0 0 INA219 Normal 0 L B
+T 0 -300 501 50 0 0 0 Curr/Power~Mon. Normal 0 L B
+T 0 -300 -601 50 0 0 0 VCC: Normal 0 L B
+T 0 0 -601 50 0 0 0 3-5.5V Normal 0 L B
+X A0 7 -500 -100 100 R 40 40 0 0 B 
+X A1 8 -500 -200 100 R 40 40 0 0 B 
+X GND 3 -500 -400 100 R 40 40 0 0 B 
+X SCL 5 -500 100 100 R 40 40 0 0 B 
+X SDA 6 -500 0 100 R 40 40 0 0 B 
+X VCC 4 -500 300 100 R 40 40 0 0 B 
+X VIN+ 1 500 100 100 L 40 40 0 0 B 
+X VIN- 2 500 -200 100 L 40 40 0 0 B 
+ENDDRAW
+ENDDEF
+#
+# End Library

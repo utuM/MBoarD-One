@@ -1,4 +1,5 @@
 EESchema Schematic File Version 4
+LIBS:MBoard_One_Stm32H734_KiCad_project-cache
 EELAYER 26 0
 EELAYER END
 $Descr A2 23386 16535
@@ -14,14 +15,14 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L MCU_ST_STM32H7:STM32H743ZITx U?
+L MCU_ST_STM32H7:STM32H743ZITx U1
 U 1 1 5C5D4170
-P 10800 8350
-F 0 "U?" H 10750 4664 50  0000 C CNN
-F 1 "STM32H743ZITx" H 10750 4573 50  0000 C CNN
-F 2 "Package_QFP:LQFP-144_20x20mm_P0.5mm" H 9700 4950 50  0001 R CNN
-F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00387108.pdf" H 10800 8350 50  0001 C CNN
-	1    10800 8350
+P 10650 8250
+F 0 "U1" H 10600 4564 50  0000 C CNN
+F 1 "STM32H743ZITx" H 10600 4473 50  0000 C CNN
+F 2 "Package_QFP:LQFP-144_20x20mm_P0.5mm" H 9550 4850 50  0001 C CNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00387108.pdf" H 10650 8250 50  0001 C CNN
+	1    10650 8250
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -55,17 +56,6 @@ F 1 "PCM5102" H 19950 6237 50  0000 C CNN
 F 2 "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm" H 19900 6300 50  0001 C CNN
 F 3 "http://www.ti.com/lit/ds/symlink/pcm5102.pdf" H 19900 6300 50  0001 C CNN
 	1    19950 5550
-	1    0    0    -1  
-$EndComp
-$Comp
-L Interface_USB:FT232H U?
-U 1 1 5C5D445B
-P 19950 8550
-F 0 "U?" H 19950 10228 50  0000 C CNN
-F 1 "FT232H" H 19950 10137 50  0000 C CNN
-F 2 "" H 19950 8550 50  0001 C CNN
-F 3 "http://www.ftdichip.com/Products/ICs/FT232H.htm" H 19950 8550 50  0001 C CNN
-	1    19950 8550
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -241,6 +231,28 @@ F 9 "" H 18150 10000 50  0001 L CNN "RS Price/Stock"
 F 10 "" H 18150 9900 50  0001 L CNN "Mouser Part Number"
 F 11 "" H 18150 9800 50  0001 L CNN "Mouser Price/Stock"
 	1    17200 10600
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GNDREF #PWR?
+U 1 1 5C63FC76
+P 11700 11900
+F 0 "#PWR?" H 11700 11650 50  0001 C CNN
+F 1 "GNDREF" H 11705 11727 50  0000 C CNN
+F 2 "" H 11700 11900 50  0001 C CNN
+F 3 "" H 11700 11900 50  0001 C CNN
+	1    11700 11900
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GNDA #PWR?
+U 1 1 5C64065A
+P 11700 12250
+F 0 "#PWR?" H 11700 12000 50  0001 C CNN
+F 1 "GNDA" H 11705 12077 50  0000 C CNN
+F 2 "" H 11700 12250 50  0001 C CNN
+F 3 "" H 11700 12250 50  0001 C CNN
+	1    11700 12250
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

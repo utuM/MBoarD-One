@@ -1,0 +1,36 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# MAX30100EFD+
+#
+DEF MAX30100EFD+ U 0 40 Y Y 1 L N
+F0 "U" -500 450 50 H V L BNN
+F1 "MAX30100EFD+" -500 -550 50 H V L BNN
+F2 "LGA14R80P2X7_560X280X130" 0 0 50 H I L BNN
+F3 "MAX30100EFD+T" 0 0 50 H I L BNN
+F4 "None" 0 0 50 H I L BNN
+F5 "Maxim Integrated" 0 0 50 H I L BNN
+F6 "None" 0 0 50 H I L BNN
+F7 "Unavailable" 0 0 50 H I L BNN
+F8 "Pulse Oximeter and Heart-Rate Sensor IC 14-Pin OLGA T/R" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 10 500 450 500 -450 N
+P 2 0 0 10 500 -450 -500 -450 N
+P 2 0 0 10 -500 -450 -500 450 N
+P 2 0 0 10 -500 450 500 450 N
+X SCL 2 -700 -50 200 R 40 40 0 0 I 
+X SDA 3 -700 -250 200 R 40 40 0 0 B 
+X PGND 4 700 -250 200 L 40 40 0 0 P 
+X R_DRV 6 700 -50 200 L 40 40 0 0 P 
+X IR_DRV 5 700 50 200 L 40 40 0 0 P 
+X IR_LED+ 10 -700 50 200 R 40 40 0 0 I 
+X R_LED+ 9 -700 150 200 R 40 40 0 0 I 
+X ~INT~ 13 -700 250 200 R 40 40 0 0 I 
+X VDD 11 700 350 200 L 40 40 0 0 W 
+X GND 12 700 -350 200 L 40 40 0 0 P 
+ENDDRAW
+ENDDEF
+#
+# End Library

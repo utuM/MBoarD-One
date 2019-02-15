@@ -1,0 +1,37 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# VL53L0X
+#
+DEF VL53L0X U 0 40 Y Y 1 L N
+F0 "U" -501 521 50 H V L BNN
+F1 "VL53L0X" -501 -601 50 H V L BNN
+F2 "SENSOR_VL53L0X" 0 0 50 H I L BNN
+F3 "Unavailable" 0 0 50 H I L BNN
+F4 "World smallest Time-of-Flight _ToF_ ranging sensor" 0 0 50 H I L BNN
+F5 "None" 0 0 50 H I L BNN
+F6 "STMicroelectronics" 0 0 50 H I L BNN
+F7 "None" 0 0 50 H I L BNN
+F8 "VL53L0X" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 5 -500 500 -500 -500 N
+P 2 0 0 5 -500 -500 500 -500 N
+P 2 0 0 5 500 -500 500 500 N
+P 2 0 0 5 500 500 -500 500 N
+X AVDDVCSEL 1 700 400 200 L 40 40 0 0 W 
+X ~XSHUT~ 5 -700 100 200 R 40 40 0 0 I 
+X GND 3 700 -400 200 L 40 40 0 0 W 
+X GND 4 700 -400 200 L 40 40 0 0 W 
+X GND 6 700 -400 200 L 40 40 0 0 W 
+X GND 12 700 -400 200 L 40 40 0 0 W 
+X GPIO1 7 700 100 200 L 40 40 0 0 O 
+X SDA 9 -700 -100 200 R 40 40 0 0 B 
+X SCL 10 -700 0 200 R 40 40 0 0 I C
+X AVDD 11 700 300 200 L 40 40 0 0 W 
+X AVSSVCSEL 2 700 -300 200 L 40 40 0 0 W 
+ENDDRAW
+ENDDEF
+#
+# End Library

@@ -1,0 +1,75 @@
+PCBNEW-LibModule-V1  
+# encoding utf-8
+Units mm
+$INDEX
+SOTFL50P300X75-6N
+$EndINDEX
+$MODULE SOTFL50P300X75-6N
+Po 0 0 0 15 00000000 00000000 ~~
+Li SOTFL50P300X75-6N
+Cd 
+Sc 00000000
+At SMD
+Op 0 0 0
+.SolderMask 0
+.SolderPaste 0
+T0 0.59075 -1.93749 1.00128 1.00128 0 0.05 N V 21 "SOTFL50P300X75-6N"
+T1 1.17623 1.71678 1.00104 1.00104 0 0.05 N V 21 "VAL**"
+DS -0.9 -0.9 -0.9 0.9 0.127 21
+DS -0.9 0.9 0.9 0.9 0.127 21
+DS 0.9 0.9 0.9 -0.9 0.127 21
+DS 0.9 -0.9 -0.9 -0.9 0.127 21
+DC -1.4 -1 -1.35 -1 0.3048 21
+DS -1.9 -1.15 1.9 -1.15 0.127 26
+DS 1.9 -1.15 1.9 1.15 0.127 26
+DS 1.9 1.15 -1.9 1.15 0.127 26
+DS -1.9 1.15 -1.9 -1.15 0.127 26
+$PAD
+Sh "1" R 0.55 0.3 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.375 -0.525
+$EndPAD
+$PAD
+Sh "2" R 0.55 0.25 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.375 0
+$EndPAD
+$PAD
+Sh "3" R 0.55 0.25 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.375 0.5
+$EndPAD
+$PAD
+Sh "4" R 0.55 0.25 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.375 0.5
+$EndPAD
+$PAD
+Sh "5" R 0.55 0.25 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.375 0
+$EndPAD
+$PAD
+Sh "6" R 0.55 0.25 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.375 -0.5
+$EndPAD
+$EndMODULE SOTFL50P300X75-6N

@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ML8511
+D UV Sensor with Voltage Output
+K
+F https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/ML8511_3-8-13.pdf
+$ENDCMP
+#
+#End Doc Library

@@ -1,0 +1,42 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# TEA5767
+#
+DEF TEA5767 U 0 40 Y Y 1 L N
+F0 "U" 0 0 50 H I L BNN
+F1 "TEA5767" 0 0 50 H I L BNN
+F2 "TJ-102BC" 0 0 50 H I L BNN
+F3 "Unavailable" 0 0 50 H I L BNN
+F4 "" 0 0 50 H I L BNN
+F5 "None" 0 0 50 H I L BNN
+F6 "NXP Semiconductors" 0 0 50 H I L BNN
+F7 "None" 0 0 50 H I L BNN
+F8 "TEA5767" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 10 -400 600 -400 -400 N
+P 2 0 0 10 -400 -400 -200 -400 N
+P 2 0 0 10 -200 -400 400 -400 N
+P 2 0 0 10 400 -400 600 -400 N
+P 2 0 0 10 600 -400 600 600 N
+P 2 0 0 10 600 600 -400 600 N
+P 2 0 0 10 -200 -400 -200 -200 N
+P 2 0 0 10 -200 -200 400 -200 N
+P 2 0 0 10 400 -200 400 -400 N
+T 0 -100 -301 50 0 0 0 32.768khz Normal 0 L B
+X 1.DATA 1 -600 500 200 R 40 40 0 0 B 
+X 2.CLK 2 -600 300 200 R 40 40 0 0 B 
+X 3.GND 3 -600 100 200 R 40 40 0 0 B 
+X 4.NC 4 -600 -100 200 R 40 40 0 0 B 
+X 5.VCC 5 -600 -300 200 R 40 40 0 0 B 
+X 6.GND 6 800 -300 200 L 40 40 0 0 B 
+X 7.LOUT 7 800 -100 200 L 40 40 0 0 B 
+X 8.ROUT 8 800 100 200 L 40 40 0 0 B 
+X 9.GND 9 800 300 200 L 40 40 0 0 B 
+X 10.ANT 10 800 500 200 L 40 40 0 0 B 
+ENDDRAW
+ENDDEF
+#
+# End Library

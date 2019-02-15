@@ -1,0 +1,149 @@
+PCBNEW-LibModule-V1  
+# encoding utf-8
+Units mm
+$INDEX
+LGA14R80P2X7_560X280X130
+$EndINDEX
+$MODULE LGA14R80P2X7_560X280X130
+Po 0 0 0 15 00000000 00000000 ~~
+Li LGA14R80P2X7_560X280X130
+Cd 
+Sc 00000000
+At SMD
+Op 0 0 0
+.SolderMask 0
+.SolderPaste 0
+T0 -0.531748 -3.56117 0.480859 0.480859 0 0.05 N V 21 "LGA14R80P2X7_560X280X130"
+T1 -0.226083 3.4465 0.480182 0.480182 0 0.05 N V 21 "VAL**"
+DS -1.4 2.8 1.4 2.8 0.127 21
+DS 1.4 2.8 1.4 -2.8 0.127 27
+DS 1.4 -2.8 -1.4 -2.8 0.127 21
+DS -1.4 -2.8 -1.4 2.8 0.127 27
+DC -2 -2.7 -1.873 -2.7 0 21
+DS -1.75 -3 1.75 -3 0.127 26
+DS 1.75 -3 1.75 3 0.127 26
+DS 1.75 3 -1.75 3 0.127 26
+DS -1.75 3 -1.75 -3 0.127 26
+DC 0 -1.7 0.475 -1.7 0 27
+DC 0 -1.7 0.635 -1.7 0.127 27
+DS -0.66 2.46 0.66 2.46 0.127 27
+DS 0.66 2.46 0.66 1.46 0.127 27
+DS 0.66 1.46 -0.66 1.46 0.127 27
+DS -0.66 1.46 -0.66 2.46 0.127 27
+DS -1.07 1.105 1.07 1.105 0.127 27
+DS 1.07 1.105 1.07 -0.085 0.127 27
+DS 1.07 -0.085 -1.07 -0.085 0.127 27
+DS -1.07 -0.085 -1.07 1.105 0.127 27
+$PAD
+Sh "14" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.075 -2.4
+$EndPAD
+$PAD
+Sh "13" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.075 -1.6
+$EndPAD
+$PAD
+Sh "12" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.075 -0.8
+$EndPAD
+$PAD
+Sh "11" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.075 0
+$EndPAD
+$PAD
+Sh "10" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.075 0.8
+$EndPAD
+$PAD
+Sh "9" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.075 1.6
+$EndPAD
+$PAD
+Sh "8" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po 1.075 2.4
+$EndPAD
+$PAD
+Sh "1" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.075 -2.4
+$EndPAD
+$PAD
+Sh "2" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.075 -1.6
+$EndPAD
+$PAD
+Sh "3" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.075 -0.8
+$EndPAD
+$PAD
+Sh "4" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.075 0
+$EndPAD
+$PAD
+Sh "5" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.075 0.8
+$EndPAD
+$PAD
+Sh "6" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.075 1.6
+$EndPAD
+$PAD
+Sh "7" R 0.5 0.35 0 0 0
+At SMD N 00888000
+.SolderMask 0
+.SolderPaste 0
+Ne 0 ""
+Po -1.075 2.4
+$EndPAD
+$EndMODULE LGA14R80P2X7_560X280X130

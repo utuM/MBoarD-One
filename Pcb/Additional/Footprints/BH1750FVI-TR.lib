@@ -1,0 +1,32 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# BH1750FVI-TR
+#
+DEF BH1750FVI-TR U 0 40 Y Y 1 L N
+F0 "U" -401 310 50 H V L BNN
+F1 "BH1750FVI-TR" -391 -371 50 H V L BNN
+F2 "SOTFL50P300X75-6N" 0 0 50 H I L BNN
+F3 "BH1750FVI-TR" 0 0 50 H I L BNN
+F4 "SMD-6 Rohm" 0 0 50 H I L BNN
+F5 "Rohm" 0 0 50 H I L BNN
+F6 "None" 0 0 50 H I L BNN
+F7 "Unavailable" 0 0 50 H I L BNN
+F8 "Light to Digital Ambient Light Sensor Digital O/P 1lux to 65535lux 6-Pin WSOF Embossed T/R" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 10 -400 300 -400 -300 N
+P 2 0 0 10 -400 -300 400 -300 N
+P 2 0 0 10 400 -300 400 300 N
+P 2 0 0 10 400 300 -400 300 N
+X VCC 1 600 200 200 L 40 40 0 0 W 
+X ADDR 2 -600 200 200 R 40 40 0 0 I 
+X GND 3 600 -200 200 L 40 40 0 0 W 
+X SDA 4 -600 -200 200 R 40 40 0 0 B 
+X DVI 5 -600 100 200 R 40 40 0 0 I 
+X SCL 6 -600 0 200 R 40 40 0 0 I C
+ENDDRAW
+ENDDEF
+#
+# End Library
