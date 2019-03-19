@@ -82,17 +82,17 @@ $EndComp
 $Comp
 L INA219:INA219 U?
 U 1 1 5C5D518D
-P 20700 2000
-F 0 "U?" H 20700 2867 50  0000 C CNN
-F 1 "INA219" H 20700 2776 50  0000 C CNN
-F 2 "SOT23-8" H 20700 2000 50  0001 L BNN
-F 3 "INA219" H 20700 2000 50  0001 L BNN
-F 4 "None" H 20700 2000 50  0001 L BNN "Field4"
-F 5 "Texas Instruments" H 20700 2000 50  0001 L BNN "Field5"
-F 6 "None" H 20700 2000 50  0001 L BNN "Field6"
-F 7 "Unavailable" H 20700 2000 50  0001 L BNN "Field7"
-F 8 "the ina219 is a high-side current shunt and power monitor with an i2c interface. the ina219 monitors both shunt drop ..." H 20700 2000 50  0001 L BNN "Field8"
-	1    20700 2000
+P 19950 1800
+F 0 "U?" H 19950 2667 50  0000 C CNN
+F 1 "INA219" H 19950 2576 50  0000 C CNN
+F 2 "SOT23-8" H 19950 1800 50  0001 L BNN
+F 3 "INA219" H 19950 1800 50  0001 L BNN
+F 4 "None" H 19950 1800 50  0001 L BNN "Field4"
+F 5 "Texas Instruments" H 19950 1800 50  0001 L BNN "Field5"
+F 6 "None" H 19950 1800 50  0001 L BNN "Field6"
+F 7 "Unavailable" H 19950 1800 50  0001 L BNN "Field7"
+F 8 "the ina219 is a high-side current shunt and power monitor with an i2c interface. the ina219 monitors both shunt drop ..." H 19950 1800 50  0001 L BNN "Field8"
+	1    19950 1800
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -209,9 +209,9 @@ $EndComp
 Wire Wire Line
 	22050 8650 22050 8600
 Text GLabel 20250 9100 0    50   Input ~ 0
-SCL
+MCU_I2C0_SCL
 Text GLabel 20250 8950 0    50   Input ~ 0
-SDA
+MCU_I2C0_SDA
 Wire Wire Line
 	22050 7650 22050 7850
 $Comp
@@ -1474,4 +1474,15 @@ Wire Wire Line
 	13150 7500 13300 7500
 Wire Wire Line
 	13300 7600 13150 7600
+$Comp
+L Connector:SD_Card J?
+U 1 1 5C7E5DE7
+P 7600 2550
+F 0 "J?" H 7600 3215 50  0000 C CNN
+F 1 "SD_Card" H 7600 3124 50  0000 C CNN
+F 2 "" H 7600 2550 50  0001 C CNN
+F 3 "http://portal.fciconnect.com/Comergent//fci/drawing/10067847.pdf" H 7600 2550 50  0001 C CNN
+	1    7600 2550
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC

@@ -82,17 +82,17 @@ $EndComp
 $Comp
 L INA219:INA219 U?
 U 1 1 5C5D518D
-P 20700 2000
-F 0 "U?" H 20700 2867 50  0000 C CNN
-F 1 "INA219" H 20700 2776 50  0000 C CNN
-F 2 "SOT23-8" H 20700 2000 50  0001 L BNN
-F 3 "INA219" H 20700 2000 50  0001 L BNN
-F 4 "None" H 20700 2000 50  0001 L BNN "Field4"
-F 5 "Texas Instruments" H 20700 2000 50  0001 L BNN "Field5"
-F 6 "None" H 20700 2000 50  0001 L BNN "Field6"
-F 7 "Unavailable" H 20700 2000 50  0001 L BNN "Field7"
-F 8 "the ina219 is a high-side current shunt and power monitor with an i2c interface. the ina219 monitors both shunt drop ..." H 20700 2000 50  0001 L BNN "Field8"
-	1    20700 2000
+P 19950 1800
+F 0 "U?" H 19950 2667 50  0000 C CNN
+F 1 "INA219" H 19950 2576 50  0000 C CNN
+F 2 "SOT23-8" H 19950 1800 50  0001 L BNN
+F 3 "INA219" H 19950 1800 50  0001 L BNN
+F 4 "None" H 19950 1800 50  0001 L BNN "Field4"
+F 5 "Texas Instruments" H 19950 1800 50  0001 L BNN "Field5"
+F 6 "None" H 19950 1800 50  0001 L BNN "Field6"
+F 7 "Unavailable" H 19950 1800 50  0001 L BNN "Field7"
+F 8 "the ina219 is a high-side current shunt and power monitor with an i2c interface. the ina219 monitors both shunt drop ..." H 19950 1800 50  0001 L BNN "Field8"
+	1    19950 1800
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -157,12 +157,12 @@ $EndComp
 $Comp
 L F-3188_CSR8645:F-3188_CSR8645 U?
 U 1 1 5C5D6029
-P 11300 3200
-F 0 "U?" H 11100 5037 60  0000 C CNN
-F 1 "F-3188_CSR8645" H 11100 4931 60  0000 C CNN
-F 2 "" H 11300 1500 60  0000 C CNN
-F 3 "" H 11300 1500 60  0000 C CNN
-	1    11300 3200
+P 5550 3350
+F 0 "U?" H 5350 5187 60  0000 C CNN
+F 1 "F-3188_CSR8645" H 5350 5081 60  0000 C CNN
+F 2 "" H 5550 1650 60  0000 C CNN
+F 3 "" H 5550 1650 60  0000 C CNN
+	1    5550 3350
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1474,4 +1474,115 @@ Wire Wire Line
 	13150 7500 13300 7500
 Wire Wire Line
 	13300 7600 13150 7600
+$Comp
+L Connector:SD_Card J?
+U 1 1 5C7E5DE7
+P 1850 2700
+F 0 "J?" H 1850 3365 50  0000 C CNN
+F 1 "SD_Card" H 1850 3274 50  0000 C CNN
+F 2 "" H 1850 2700 50  0001 C CNN
+F 3 "http://portal.fciconnect.com/Comergent//fci/drawing/10067847.pdf" H 1850 2700 50  0001 C CNN
+	1    1850 2700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR?
+U 1 1 5C8092B6
+P 9500 3100
+F 0 "#PWR?" H 9500 2950 50  0001 C CNN
+F 1 "+3V3" H 9515 3273 50  0000 C CNN
+F 2 "" H 9500 3100 50  0001 C CNN
+F 3 "" H 9500 3100 50  0001 C CNN
+	1    9500 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7800 3650 7800 3200
+Wire Wire Line
+	7800 3200 7900 3200
+Wire Wire Line
+	9500 3200 9500 3100
+Wire Wire Line
+	7900 3650 7900 3200
+Connection ~ 7900 3200
+Wire Wire Line
+	7900 3200 8000 3200
+Wire Wire Line
+	8000 3650 8000 3200
+Connection ~ 8000 3200
+Wire Wire Line
+	8000 3200 8100 3200
+Wire Wire Line
+	8100 3650 8100 3200
+Connection ~ 8100 3200
+Wire Wire Line
+	8100 3200 8200 3200
+Wire Wire Line
+	8200 3650 8200 3200
+Connection ~ 8200 3200
+Wire Wire Line
+	8200 3200 8300 3200
+Wire Wire Line
+	8300 3650 8300 3200
+Connection ~ 8300 3200
+Wire Wire Line
+	8400 3650 8400 3200
+Wire Wire Line
+	8300 3200 8400 3200
+Connection ~ 8400 3200
+Wire Wire Line
+	8500 3650 8500 3200
+Wire Wire Line
+	8400 3200 8500 3200
+Connection ~ 8500 3200
+Wire Wire Line
+	8500 3200 8600 3200
+Wire Wire Line
+	8600 3650 8600 3200
+Connection ~ 8600 3200
+Wire Wire Line
+	8600 3200 8700 3200
+Wire Wire Line
+	8700 3650 8700 3200
+Connection ~ 8700 3200
+Wire Wire Line
+	8700 3200 8800 3200
+Wire Wire Line
+	8800 3650 8800 3200
+Connection ~ 8800 3200
+Wire Wire Line
+	8800 3200 8900 3200
+Connection ~ 8900 3200
+Wire Wire Line
+	8900 3200 9000 3200
+Wire Wire Line
+	9000 3650 9000 3200
+Connection ~ 9000 3200
+Wire Wire Line
+	9000 3200 9100 3200
+Wire Wire Line
+	8900 3200 8900 3650
+Wire Wire Line
+	9100 3650 9100 3200
+Connection ~ 9100 3200
+Wire Wire Line
+	9100 3200 9200 3200
+Wire Wire Line
+	9200 3650 9200 3200
+Connection ~ 9200 3200
+Wire Wire Line
+	9200 3200 9300 3200
+Wire Wire Line
+	9300 3650 9300 3200
+Connection ~ 9300 3200
+Wire Wire Line
+	9300 3200 9500 3200
+Text GLabel 10750 6450 2    50   Input ~ 0
+MCU_I2C0_SCL
+Text GLabel 10750 6350 2    50   Input ~ 0
+MCU_I2C0_SDA
+Wire Wire Line
+	10750 6350 10100 6350
+Wire Wire Line
+	10750 6450 10100 6450
 $EndSCHEMATC
