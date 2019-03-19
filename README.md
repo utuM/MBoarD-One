@@ -23,3 +23,7 @@ Device features:
 * RGB LED to indicate You about some system events;
 * proximity sensors for hands to detect that device is in hands (or can be user-defined);
 * only hardware buttons and power switcher.
+
+## Updates.
+19.03.2019  |  Will coming from C++ to C code for drivers, step-by-step.
+            |  Managers will be presented using C++.
