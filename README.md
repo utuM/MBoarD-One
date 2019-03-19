@@ -26,4 +26,4 @@ Device features:
 
 ## Updates.
 19.03.2019  |  Will coming from C++ to C code for drivers, step-by-step.
-            |  Managers will be presented using C++.
+               Managers will be presented using C++.
