@@ -27,7 +27,7 @@ namespace Driver {
       **/
     class Gpio : public Peripheral {
         public:
-		    /**
+            /**
               * Possible GPIO pin positions for one port.
               **/
             enum GpioPin : uint16_t {
@@ -55,9 +55,9 @@ namespace Driver {
             GpioPin m_pin;         ///< Pin position on port.
           
         public:          
-		    /**
+            /**
               * Possible set of GPIO ports (can be different), represented as
-			  * addresses to the general port structure object.
+              * addresses to the general port structure object.
               **/
             enum GpioPort : uint32_t {
 #if defined(STM32H743xx)
@@ -109,7 +109,7 @@ namespace Driver {
             /* Let it be empty. */
           
         public:
-		    /**
+            /**
               * Possible input pins pulls.
               **/
             enum Pull : uint32_t {
