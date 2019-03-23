@@ -1,6 +1,6 @@
 /**
   * @file    Gpio.h
-  * @version 1.0.0
+  * @version 1.0.1
   * @author  utuM (Kostyantyn Komarov)
   * @data    19.03.2019 (creation)
   * @data    23.03.2019 (release)
@@ -26,7 +26,7 @@ namespace Driver {
       * Basic GPIO class implementation.
       **/
     class Gpio : public Peripheral {
-        public :
+        public:
 		    /**
               * Possible GPIO pin positions for one port.
               **/
@@ -49,12 +49,12 @@ namespace Driver {
                 kGpioPin15 = GPIO_PIN_15
             };
       
-        private :            
+        private:            
             std::string m_name;    ///< Short purpose of pin.
             GPIO_TypeDef* m_pPort; ///< Pointer to global port structure.
             GpioPin m_pin;         ///< Pin position on port.
           
-        public :          
+        public:          
 		    /**
               * Possible set of GPIO ports (can be different), represented as
 			  * addresses to the general port structure object.
