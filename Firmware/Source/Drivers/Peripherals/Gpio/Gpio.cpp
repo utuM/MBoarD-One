@@ -1,6 +1,6 @@
 /**
   * @file    Gpio.cpp
-  * @version 1.0.0
+  * @version 1.0.1
   * @author  Kostyantyn Komarov (utuM)
   * @data    19.03.2019 (creation)
   * @data    23.03.2019 (release)
@@ -14,7 +14,7 @@
   *          On object desctructure, current pin will be de-initialized.
   **/
 
-#include "Gpioj.h"
+#include "Gpio.h"
 
 /**
   * Enable port by input port index.

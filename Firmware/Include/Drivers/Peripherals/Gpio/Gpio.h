@@ -1,6 +1,6 @@
 /**
   * @file    Gpio.h
-  * @version 1.0.1
+  * @version 1.0.2
   * @author  utuM (Kostyantyn Komarov)
   * @data    19.03.2019 (creation)
   * @data    23.03.2019 (release)
@@ -90,10 +90,10 @@ namespace Driver {
             ~Gpio(void) { /* Leave empty for prevent false init. */ } 
             
             // Setters and getters.
-            void setPort(GpioPort port) { m_port = (GPIO_TypeDef*)port; }
+            void setPort(GpioPort port) { m_pPort = (GPIO_TypeDef*)port; }
             void setPin(GpioPin pin) { m_pin = pin; }
             std::string getPinName(void) { return m_name; }
-            GPIO_TypeDef* getPort(void) { return m_port; }
+            GPIO_TypeDef* getPort(void) { return m_pPort; }
             GpioPin getPin(void) { return m_pin; }
             
             // Basic methods.
