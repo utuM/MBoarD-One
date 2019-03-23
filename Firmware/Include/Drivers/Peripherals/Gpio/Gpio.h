@@ -21,9 +21,15 @@
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_gpio.h"
 
-namespace Driver {    
+namespace Driver {
+    /**
+      * Basic GPIO class implementation.
+      **/
     class Gpio : public Peripheral {
         public :
+		    /**
+              * Possible GPIO pin positions for one port.
+              **/
             enum GpioPin : uint16_t {
                 kGpioPin0  = GPIO_PIN_0,
                 kGpioPin1  = GPIO_PIN_1,
@@ -44,11 +50,15 @@ namespace Driver {
             };
       
         private :            
-            std::string m_name;
-            GPIO_TypeDef* m_port;
-            GpioPin m_pin;
+            std::string m_name;    ///< Short purpose of pin.
+            GPIO_TypeDef* m_pPort; ///< Pointer to global port structure.
+            GpioPin m_pin;         ///< Pin position on port.
           
         public :          
+		    /**
+              * Possible set of GPIO ports (can be different), represented as
+			  * addresses to the general port structure object.
+              **/
             enum GpioPort : uint32_t {
 #if defined(STM32H743xx)
                 kGpioPortA = (uint32_t)GPIOA,
@@ -64,6 +74,9 @@ namespace Driver {
 #endif
             };
             
+            /**
+              * Possible GPIO level changing speed.
+              **/
             enum GpioSpeed : uint32_t {
                 kGpioSpeedLow      = GPIO_SPEED_FREQ_LOW,
                 kGpioSpeedMedium   = GPIO_SPEED_FREQ_MEDIUM,
@@ -71,31 +84,41 @@ namespace Driver {
                 kGpioSpeedVeryHigh = GPIO_SPEED_FREQ_VERY_HIGH
             };
             
+            // Constructors and desctructor.
             Gpio(void)  { /* Leave empty for prevent false init. */ }
             Gpio(std::string name) { m_name = name; }
             ~Gpio(void) { /* Leave empty for prevent false init. */ } 
             
+            // Setters and getters.
             void setPort(GpioPort port) { m_port = (GPIO_TypeDef*)port; }
             void setPin(GpioPin pin) { m_pin = pin; }
             std::string getPinName(void) { return m_name; }
             GPIO_TypeDef* getPort(void) { return m_port; }
             GpioPin getPin(void) { return m_pin; }
             
+            // Basic methods.
             void enablePort(GpioPort port);
             void disablePort(GpioPort port);
     };
     
+    /**
+      * Child GPIO class implementation for input signals pin.
+      **/
     class InputPin : public Gpio {
         private:
             /* Let it be empty. */
           
         public:
+		    /**
+              * Possible input pins pulls.
+              **/
             enum Pull : uint32_t {
                 kInputNoPull   = GPIO_NOPULL,
                 kInputPullUp   = GPIO_PULLUP,
                 kInputPullDown = GPIO_PULLDOWN,
             };
-          
+         
+            // Constructor and destructor.
             InputPin(std::string name,
                      GpioPort port,
                      GpioPin pin,
@@ -103,19 +126,27 @@ namespace Driver {
                      Pull pull);
             ~InputPin(void);
             
+            // Basic method.
             bool getPinState(void);
     };
-    
+
+    /**
+      * Child GPIO class implementation for output signals pin.
+      **/
     class OutputPin : public Gpio {
         private:
             /* Let it be empty. */
           
         public:
+            /**
+              * Possible output levels.
+              **/
             enum State : uint8_t {
-                kStateReset = 0x00,
-                kStateSet
+                kStateReset = 0x00, // Down to 0V level.
+                kStateSet           // Up to 3.3V level.
             };
-          
+
+            // Constructor and destructor.
             OutputPin(std::string name,
                       GpioPort port,
                       GpioPin pin,
@@ -123,6 +154,7 @@ namespace Driver {
                       State state);
             ~OutputPin(void);
             
+            // Basic methods.
             void setPinState(State state);
             void togglePin(void);
     };
