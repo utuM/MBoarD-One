@@ -8,93 +8,105 @@
 
 #include "Mpu9250.h"
 
-Driver::Mpu9250::Mpu9250(void)
-{
+#include <string.h>
 
+Driver::Mpu9250::Mpu9250ErrorCode Driver::Mpu9250::_init(void)
+{
+    // Clear up the data buffers.
+    memset(m_accelerometer, 0x00, sizeof(float) * 3);
+    memset(m_gyroscope, 0x00, sizeof(float) * 3);
+    memset(m_magnetometer, 0x00, sizeof(float) * 3);
+    
+    // Setting up the sensor.
+    
+}
+
+Driver::Mpu9250::Mpu9250(void) : Device("MPU9250"),
+                                 m_isInit(false),
+                                 m_error(kMpu9250NoError)
+{
+    // Prepare interface for communication.
+    I2cParameters l_parameters = {
+        0,
+        s_kMpu9250Address,
+        kI2cNormalMode,
+        true
+    };
+    // Initialize the sensor only if used interface was initialized
+    // successfully.
+    if (!m_interface.init(l_parameters)) {
+        _init();
+    }
+    else {
+        m_error = kMpu9250ErrInterfaceIsntInit;
+    }
 }
 
 Driver::Mpu9250::~Mpu9250(void)
 {
-
+    // Turn the sensor into the sleep mode on object destruction.
+    if (m_isInit && m_error == kMpu9250NoError) {
+        toggle(false);
+        m_isInit = false;
+    }
 }
 
-void Driver::Mpu9250::getAccelerator(float& x, float& y, float& z)
+Driver::Mpu9250::Mpu9250ErrorCode
+Driver::Mpu9250::updateAccelerator(float& rXValue,
+                                   float& rYValue,
+                                   float& rZValue)
 {
-    uint8_t l_byte[6] = {0};
-    // Get accelerometer X axis.
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_ACCEL_XOUT_H, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[0], 1, 1000);
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_ACCEL_XOUT_L, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[1], 1, 1000);
-    // Get accelerometer Y axis.
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_ACCEL_YOUT_H, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[2], 1, 1000);
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_ACCEL_YOUT_L, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[3], 1, 1000);
-    // Get accelerometer Z axis.
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_ACCEL_ZOUT_H, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[4], 1, 1000);
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_ACCEL_ZOUT_L, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[5], 1, 1000);
+    uint8_t l_rxBuffer[6] = {0};
+    // Read all accelerometer axises data once.
+    if (m_interface.receiveData(kMpu9250AccelXOutH, &l_rxBuffer[0], 6)) {
+        return (m_error = kMpu9250ErrAccelDataReading);
+    }
     
-    x = (float)((uint16_t)l_byte[0] << 8 | l_byte[1]);
-    y = (float)((uint16_t)l_byte[2] << 8 | l_byte[3]);
-    z = (float)((uint16_t)l_byte[4] << 8 | l_byte[5]);
+    x = (float)((uint16_t)l_rxBuffer[0] << 8 | l_rxBuffer[1]);
+    y = (float)((uint16_t)l_rxBuffer[2] << 8 | l_rxBuffer[3]);
+    z = (float)((uint16_t)l_rxBuffer[4] << 8 | l_rxBuffer[5]);
 }
 
-void Driver::Mpu9250::getGyroscope(float& x, float& y, float& z)
+Driver::Mpu9250::Mpu9250ErrorCode
+Driver::Mpu9250::updateGyroscope(float& rXValue,
+                                 float& rYValue,
+                                 float& rZValue)
 {
-    uint8_t l_byte[6] = {0};
-    // Get gyroscope X axis.
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_GYRO_XOUT_H, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[0], 1, 1000);
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_GYRO_XOUT_L, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[1], 1, 1000);
-    // Get gyroscope Y axis.
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_GYRO_YOUT_H, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[2], 1, 1000);
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_GYRO_YOUT_L, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[3], 1, 1000);
-    // Get gyroscope Z axis.
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_GYRO_ZOUT_H, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[4], 1, 1000);
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_GYRO_ZOUT_L, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[5], 1, 1000);
+    uint8_t l_rxBuffer[6] = {0};
+    // Read all gyroscope axises data once.
+    if (m_interface.receiveData(kMpu9250GyroXOutH, &l_rxBuffer[0], 6)) {
+        return (m_error = kMpu9250ErrGyroDataReading);
+    }
     
-    x = (float)((uint16_t)l_byte[0] << 8 | l_byte[1]);
-    y = (float)((uint16_t)l_byte[2] << 8 | l_byte[3]);
-    z = (float)((uint16_t)l_byte[4] << 8 | l_byte[5]);
+    x = (float)((uint16_t)l_rxBuffer[0] << 8 | l_rxBuffer[1]);
+    y = (float)((uint16_t)l_rxBuffer[2] << 8 | l_rxBuffer[3]);
+    z = (float)((uint16_t)l_rxBuffer[4] << 8 | l_rxBuffer[5]);
 }
 
-void Driver::Mpu9250::getMagnitometer(float& x, float& y, float& z)
+Driver::Mpu9250::Mpu9250ErrorCode
+Driver::Mpu9250::updateMagnitometer(float& rXValue,
+                                    float& rYValue,
+                                    float& rZValue)
 {
-    uint8_t l_byte[6] = {0};
+    uint8_t l_rxBuffer[6] = {0};
     // Get magnitometer X axis.
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250MagnAddress, MPU9250_HXH, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[0], 1, 1000);
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250MagnAddress, MPU9250_HXL, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[1], 1, 1000);
-    // Get magnitometer Y axis.
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250MagnAddress, MPU9250_HYH, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[2], 1, 1000);
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250MagnAddress, MPU9250_HYL, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[3], 1, 1000);
-    // Get magnitometer Z axis.
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250MagnAddress, MPU9250_HZH, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[4], 1, 1000);
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250MagnAddress, MPU9250_HZL, 
-                      I2C_MEMADD_SIZE_8BIT, &l_byte[5], 1, 1000);
+    if (m_interface.receiveData(kMpu9250MagnXL, &l_rxBuffer[0], 6)) {
+        return (m_error = kMpu9250ErrMagnDataReading);
+    }
     
-    x = (float)((uint16_t)l_byte[0] << 8 | l_byte[1]);
-    y = (float)((uint16_t)l_byte[2] << 8 | l_byte[3]);
-    z = (float)((uint16_t)l_byte[4] << 8 | l_byte[5]);
+    x = (float)((uint16_t)l_rxBuffer[1] << 8 | l_rxBuffer[0]);
+    y = (float)((uint16_t)l_rxBuffer[3] << 8 | l_rxBuffer[2]);
+    z = (float)((uint16_t)l_rxBuffer[5] << 8 | l_rxBuffer[4]);
 }
 
 bool Driver::Mpu9250::selfTest(void)
 {
     uint8_t l_id = 0;
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250Address, MPU9250_WHO_AM_I, 
-                      I2C_MEMADD_SIZE_8BIT, &l_id, 1, 1000);
+    // Self-test request.
+    if (m_interface.receiveData(kMpu9250WhoAmI, &l_id, 1)) {
+        m_error = kMpu9250ErrMagnDataReading;
+        return false;
+    }
 
     return (l_id == 0x73 ? true : false);
 }
@@ -102,8 +114,16 @@ bool Driver::Mpu9250::selfTest(void)
 bool Driver::Mpu9250::magnSelfTest(void)
 {
     uint8_t l_id = 0;
-    HAL_I2C_Mem_Read(&hi2c1, s_kMpu9250MagnAddress, MPU9250_WIA, 
-                      I2C_MEMADD_SIZE_8BIT, &l_id, 1, 1000);
+    // Magnetometer self-test request.
+    if (m_interface.receiveData(kMpu9250MagnWhoAmI, &l_id, 1)) {
+        m_error = kMpu9250ErrMagnDataReading;
+        return false;
+    }
 
     return (l_id == 0x48 ? true : false);
+}
+
+Driver::Mpu9250::Mpu9250ErrorCode Driver::Mpu9250::toggle(bool isPowerOn)
+{
+
 }

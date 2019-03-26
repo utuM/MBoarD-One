@@ -17,8 +17,23 @@ namespace Driver {
     const uint8_t s_kMpu9250MagnAddress = 0x0C << 1;
 
     class Mpu9250 : public Device<I2c> {
+        public:
+            enum Mpu9250ErrorCode : uint8_t {
+                kMpu9250NoError              = 0x00,
+                kMpu9250ErrInterfaceIsntInit,
+                kMpu9250ErrAccelDataReading,
+                kMpu9250ErrGyroDataReading,
+                kMpu9250ErrMagnDataReading,
+            };
+      
         private:
+            bool m_isInit;
+            float m_accelerometer[3];
+            float m_gyroscope[3];
+            float m_magnetometer[3];
+            Mpu9250ErrorCode m_error;
             
+            Mpu9250ErrorCode _init(void);
 
         public:
            /**
@@ -198,12 +213,20 @@ namespace Driver {
             Mpu9250(void);
             ~Mpu9250(void);
 
-            void getAccelerator(float& x, float& y, float& z);
-            void getGyroscope(float& x, float& y, float& z);
-            void getMagnitometer(float& x, float& y, float& z);
-    
+            uint8_t getError(void) { return (uint8_t)m_error; }
+            
+            Mpu9250ErrorCode updateAccelerator(float& rXValue,
+                                               float& rYValue,
+                                               float& rZValue);
+            Mpu9250ErrorCode updateGyroscope(float& rXValue,
+                                             float& rYValue,
+                                             float& rZValue);
+            Mpu9250ErrorCode updateMagnitometer(float& rXValue,
+                                                float& rYValue,
+                                                float& rZValue);
             bool selfTest(void);
-            bool magnSelfTest(void);
+            bool magnSelfTest(void);   
+            Mpu9250ErrorCode toggle(bool isPowerOn);
     };
 }
 
