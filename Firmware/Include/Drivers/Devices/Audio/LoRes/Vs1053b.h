@@ -10,14 +10,22 @@
 #define __DEVICE_VS1053B_H
 
 #include "Device.h"
+#include "Gpio_c.h"
+#include "Typedefs.h"
 
-namespace Driver {
-    class Vs1053b {
+namespace Driver
+{
+    /**
+      * VS1053B class.
+      **/
+    class Vs1053b
+    {
         public:
             /**
               * VS1053B possible operations.
               **/
-            enum Vs1053bOperation : uint8_t {
+            enum Vs1053bOperation : u8
+            {
                 kVs1053bWrite = 0x02, ///< For write into register operations.
                 kVs1053bRead          ///< For read from register operations.
             };
@@ -25,7 +33,8 @@ namespace Driver {
             /**
               * VS1053B available registers.
               **/
-            enum Vs1053bRegisters : uint8_t {
+            enum Vs1053bRegisters : u8
+            {
                 kVs1053bMode       = 0x00, ///< Mode control.
                 kVs1053bStatus,            ///< Status of the device.
                 kVs1053bBass,              ///< Built-in bass/treble control.
@@ -47,7 +56,8 @@ namespace Driver {
             /**
               * VS1053B 'kVs1053bMode' bit values, for R/W.
               **/
-            enum Vs1053bModeRegister : uint16_t {
+            enum Vs1053bModeRegister : u16
+            {
                 kVs1053bDifferential  = 0x0001, ///< Left channel inverted.
                 kVs1053bAllowMpeg1_2  = 0x0002, ///< Allow MPEG layers 1 and 2.
                 kVs1053bSoftReset     = 0x0004, ///< Provides soft reset.
@@ -70,7 +80,8 @@ namespace Driver {
             /**
               * VS1053B 'kVs1053bStatus' bit values, for R/W.
               **/
-            enum Vs1053bStatusRegister : uint16_t {
+            enum Vs1053bStatusRegister : u16
+            {
                 kVs1053bReference  = 0x0001, ///< Reference voltage is 1.65V,
                                              ///  else - 1.23V.
                 kVs1053bAdClock    = 0x0002, ///< AD clock select is 3MHz,
@@ -85,7 +96,8 @@ namespace Driver {
             /**
               * VS1053B possible swing values.
               **/ 
-            enum Vs1053bSwing : uint16_t {
+            enum Vs1053bSwing : u16
+            {
                 kVs1053bVolume0_5dB = 0x1000, ///< +0.5 dB.
                 kVs1053bVolume1_0dB = 0x2000  ///< +1.0 dB.
                 // Other values, up to +3.0dB, do not work, according to
@@ -95,23 +107,40 @@ namespace Driver {
             /**
               * VS1053B possible error codes.
               **/
-            enum Vs1053bErrorCode {
-                kVs1053bNoError = 0x00 ///< No error was occured.
+            enum Vs1053bErrorCode : u8
+            {
+                kVs1053bNoError = 0x00,       ///< No error was occured.
+                kVs1053bErrInterfaceIsntInit, ///< The SPI interface hasn't been
+                                              ///  initialized correctly.
+                
             };
           
+            // Constructor and destructor.
             Vs1053b(void);
             ~Vs1053b(void);
             
-            bool getInit(void) { return m_isInit; }
-            uint8_t getError(void) { return (uint8_t)m_error; }
+            // Setter and getters.
+            Vs1053bErrorCode setVolume(const u8 value);
+            u8 getVolume(u8 value);
+            flag getInit(void) { return _m_isInit; }
+            u8 getError(void) { return (u8)_m_error; }
             
+            // Basic methods.
+            Vs1053bErrorCode playAudioSample(u8* pData, u16 size);
             Vs1053bErrorCode toggle(bool isTurnedOn);
       
         private:
-            bool m_isInit;
-            Vs1053bErrorCode m_error;
+            flag _m_isInit;            ///< Properly initialization flag.
+            InputPin* _m_pPinDreq;     ///< 'DREQ' pin object, input, no-pull.
+            OutputPin* _m_pPinSs;      ///< 'SS' pin object, output.
+            OutputPin* _m_pPinDc;      ///< 'D/C' pin object, output.
+            OutputPin* _m_pPinRst;     ///< 'RESET' pin object, output.
+            Vs1053bErrorCode _m_error; ///< Current error.
             
+            // Private basic methods.
             Vs1053bErrorCode _init(void);
+            Vs1053bErrorCode _runSineTest(u16 frequency,
+                                          u16 duration);
             Vs1053bErrorCode _verify(void);
     };
 }
