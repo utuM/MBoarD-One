@@ -2,7 +2,7 @@
   *  @file       Vs1053b.h (header file)
   *  @version    0.1.0
   *  @author     utuM (Kostyantyn Komarov)
-  *  @date       19.04.2019 (release)
+  *  @date       19.04.2019 (creation)
   *  @brief      VS1053B decoder class implementation.
   **/
 
@@ -10,7 +10,7 @@
 #define __DEVICE_VS1053B_H
 
 #include "Device.h"
-#include "Gpio_c.h"
+#include "Gpio_cpp.h"
 #include "Typedefs.h"
 
 namespace Driver
@@ -112,7 +112,22 @@ namespace Driver
                 kVs1053bNoError = 0x00,       ///< No error was occured.
                 kVs1053bErrInterfaceIsntInit, ///< The SPI interface hasn't been
                                               ///  initialized correctly.
-                
+                kVs1053bErrIsntVerified,      ///< Device is not verified:
+                                              ///  current one is not VS1053B.
+                kVs1053bErrDeviceIsntInit,    ///< The device has been
+                                              ///  initialized properly.
+                kVs1053bErrNullInputBuffer,   ///< Input buffer to read or 
+                                              ///  write is NULL.
+                kVs1053bErrDeviceIsntReady,   ///< Cannot proceed read/write
+                                              ///  operations: device is busy.
+                kVs1053bErrReadRegister,      ///< Error was occured during read
+                                              ///  operation.
+                kVs1053bErrWriteRegister,     ///< Error was occured during
+                                              ///  write operation.
+                kVs1053bErrSendData,          ///< Cannot send data buffer to 
+                                              ///  the device.
+                kVs1053bErrInvalidParams,     ///< Pointer to buffer or size
+                                              ///  value is invalid.
             };
           
             // Constructor and destructor.
@@ -121,13 +136,13 @@ namespace Driver
             
             // Setter and getters.
             Vs1053bErrorCode setVolume(const u8 value);
-            u8 getVolume(u8 value);
+            Vs1053bErrorCode getVolume(u8& rValue);
             flag getInit(void) { return _m_isInit; }
             u8 getError(void) { return (u8)_m_error; }
             
             // Basic methods.
-            Vs1053bErrorCode playAudioSample(u8* pData, u16 size);
-            Vs1053bErrorCode toggle(bool isTurnedOn);
+            Vs1053bErrorCode feedAudioSample(u8* pData, u16 size);
+            Vs1053bErrorCode toggle(flag isTurnedOn);
       
         private:
             flag _m_isInit;            ///< Properly initialization flag.
@@ -137,11 +152,16 @@ namespace Driver
             OutputPin* _m_pPinRst;     ///< 'RESET' pin object, output.
             Vs1053bErrorCode _m_error; ///< Current error.
             
+            // Private read/write device operations.
+            Vs1053bErrorCode _sciRead(const u8 reg, u16 rValue);
+            Vs1053bErrorCode _sciWrite(const u8 reg, u16 value);
+            Vs1053bErrorCode _sdiWrite(u8* pData, u16 size);
+            flag _waitForDeviceReady(void);
             // Private basic methods.
             Vs1053bErrorCode _init(void);
             Vs1053bErrorCode _runSineTest(u16 frequency,
                                           u16 duration);
-            Vs1053bErrorCode _verify(void);
+            bool _verify(void);
     };
 }
 
