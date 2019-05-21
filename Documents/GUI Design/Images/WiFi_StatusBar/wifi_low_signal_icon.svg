@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666665 8.4666669"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="wifi_low_signal_icon.svg"
+   inkscape:export-filename="D:\__MBOARD\MBoarD-One\Documents\GUI Design\Images\WiFi_StatusBar\PNG\wifi_mid_signal_icon.png"
+   inkscape:export-xdpi="384"
+   inkscape:export-ydpi="384">
+  <defs
+     id="defs2">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 4.2333334 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="8.4666665 : 4.2333334 : 1"
+       inkscape:persp3d-origin="4.2333333 : 2.8222223 : 1"
+       id="perspective4588" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="16"
+     inkscape:cx="19.205747"
+     inkscape:cy="13.267082"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1275"
+     inkscape:window-height="991"
+     inkscape:window-x="635"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-288.53332)">
+    <circle
+       r="0"
+       style="fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.9039942;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="ellipse4543"
+       cx="4.2522326"
+       cy="292.79501" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.6586082;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4592"
+       sodipodi:type="arc"
+       sodipodi:cx="143.1255"
+       sodipodi:cy="-256.36993"
+       sodipodi:rx="1.3943692"
+       sodipodi:ry="1.3943692"
+       sodipodi:start="0"
+       sodipodi:end="4.2040111"
+       sodipodi:open="true"
+       d="m 144.51987,-256.36993 a 1.3943692,1.3943692 0 0 1 -1.15921,1.37439 1.3943692,1.3943692 0 0 1 -1.55021,-0.91081 1.3943692,1.3943692 0 0 1 0.63633,-1.68161"
+       transform="rotate(150)" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.59009105;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4596"
+       sodipodi:type="arc"
+       sodipodi:cx="4.2346206"
+       sodipodi:cy="293.58368"
+       sodipodi:rx="0.74393094"
+       sodipodi:ry="0.74393094"
+       sodipodi:start="4.0411104"
+       sodipodi:end="4.0390217"
+       d="m 3.7719047,293.00116 a 0.74393094,0.74393094 0 0 1 1.0449922,0.1195 0.74393094,0.74393094 0 0 1 -0.1189524,1.04505 0.74393094,0.74393094 0 0 1 -1.0451164,-0.1184 0.74393094,0.74393094 0 0 1 0.1178609,-1.04518"
+       sodipodi:open="true" />
+  </g>
+</svg>
