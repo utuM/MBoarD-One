@@ -1,25 +1,39 @@
+/**
+  * @filename Gpio.c
+  * @author   utuM
+  * @date     16.06.2019 (creation)
+  * @version  0.1.0
+  * @brief    
+  **/
+
 #include "GpioC.h"
 
 #include <string.h>
 
-#define TOTAL_GPIO_PORTS_AMOUNT 11
-#define TOTAL_PINS_FOR_PORT     16
+// RCC generating flags.
+#define RCC_GPIOA_CLK_ENABLED      0
+#define RCC_GPIOB_CLK_ENABLED      0
+#define RCC_GPIOC_CLK_ENABLED      0
+#define RCC_GPIOD_CLK_ENABLED      0
+#define RCC_GPIOE_CLK_ENABLED      0
+#define RCC_GPIOF_CLK_ENABLED      0
+#define RCC_GPIOG_CLK_ENABLED      0
+#define RCC_GPIOH_CLK_ENABLED      0
+#define RCC_GPIOI_CLK_ENABLED      0
+#define RCC_GPIOJ_CLK_ENABLED      0
+#define RCC_GPIOK_CLK_ENABLED      0
+// Other definitions.
+#define TOTAL_GPIO_PORTS_AMOUNT   11
+#define TOTAL_PORT_PINS           16
 
-#define RCC_GPIOA_CLK_ENABLED 0
-#define RCC_GPIOB_CLK_ENABLED 0
-#define RCC_GPIOC_CLK_ENABLED 0
-#define RCC_GPIOD_CLK_ENABLED 0
-#define RCC_GPIOE_CLK_ENABLED 0
-#define RCC_GPIOF_CLK_ENABLED 0
-#define RCC_GPIOG_CLK_ENABLED 0
-#define RCC_GPIOH_CLK_ENABLED 0
-#define RCC_GPIOI_CLK_ENABLED 0
-#define RCC_GPIOJ_CLK_ENABLED 0
-#define RCC_GPIOK_CLK_ENABLED 0
-
-static GPIO_Handler s_gpio[TOTAL_GPIO_PORTS_AMOUNT][TOTAL_PINS_FOR_PORT] = {0};
+static GPIO_Handler s_gpio[TOTAL_GPIO_PORTS_AMOUNT][TOTAL_PORT_PINS] = {0};
 static GPIO_TypeDef* sGPIO_EnablePort(GPIO_Port port);
 
+/**
+  * @brief Port enabling.
+  * @param[i] port - port clock generating to be enabled.
+  * @return Pointer to global port object where selected pin is placed.
+  **/
 static GPIO_TypeDef* sGPIO_EnablePort(GPIO_Port port)
 {
     GPIO_TypeDef* l_gpio = 0;
@@ -128,6 +142,16 @@ static GPIO_TypeDef* sGPIO_EnablePort(GPIO_Port port)
     return l_gpio;
 }
 
+/**
+  * @brief Input pin initialisation.
+  * @param[i] port      - pin port.
+  * @param[i] pin       - pin number by order.
+  * @param[i] pull      - pull direction.
+  * @param[i] speed     - pin state switching speed.
+  * @param[i] pCallback - pointer to function which will be trigger by external
+  *                       interrupt.
+  * @return Pointer to input pin object that is initialised.
+  **/
 GPIO_Handler* GPIO_InitInput(GPIO_Port port, GPIO_Pin pin,
                              GPI_InPull pull, GPIO_Speed speed)
 {
@@ -135,15 +159,14 @@ GPIO_Handler* GPIO_InitInput(GPIO_Port port, GPIO_Pin pin,
     memset(&s_gpio[(u8)port][(u8)pin], 0x00, sizeof(GPIO_Handler));
     // Prepare value for input type.
     GPIO_TypeDef* l_gpio = sGPIO_EnablePort(port);
-    u32 l_mode  = 0xFFFFFFFF & ( 0xFFFFFFFC << ((u8)pin * 2)),
-        l_speed = 0xFFFFFFFF & ((0xFFFFFFFC | (u8)speed) << ((u8)pin * 2)),
-        l_pull  = 0xFFFFFFFF & ((0xFFFFFFFC | (u8)pull)  << ((u8)pin * 2));
     // Configure pin as input.
-    l_gpio->MODER &= l_mode;
+    l_gpio->MODER   =  l_gpio->MODER   & (0xFFFFFFFC << ((u8)pin * 2));
     // Configure input speed.
-    l_gpio->OSPEEDR &= l_speed;
+    l_gpio->OSPEEDR = (l_gpio->OSPEEDR & (0xFFFFFFFC << ((u8)pin * 2))) | 
+                       ((u32)speed << ((u8)pin * 2));
     // Configure input pull.
-    l_gpio->PUPDR &= l_pull;
+    l_gpio->PUPDR   = (l_gpio->PUPDR   & (0xFFFFFFFC << ((u8)pin * 2))) |
+                       ((u32)pull  << ((u8)pin * 2));
     // Prepare pin structure object.
     s_gpio[(u8)port][(u8)pin].m_pInstance = l_gpio;
     s_gpio[(u8)port][(u8)pin].m_port = port;
@@ -152,29 +175,39 @@ GPIO_Handler* GPIO_InitInput(GPIO_Port port, GPIO_Pin pin,
     s_gpio[(u8)port][(u8)pin].m_pullType = pull;
     s_gpio[(u8)port][(u8)pin].m_outType = GPO_ISNT_IN_USE;
     s_gpio[(u8)port][(u8)pin].m_state = GPIO_RESET;
+    s_gpio[(u8)port][(u8)pin].m_isInitialised = 1;
 
     return &s_gpio[(u8)port][(u8)pin];
 }
 
+/**
+  * @brief Output pin initialisation.
+  * @param[i] port  - pin port.
+  * @param[i] pin   - pin number by order.
+  * @param[i] type  - output type.
+  * @param[i] speed - pin state switching speed.
+  * @param[i] state - default signal state.
+  * @return Pointer to output pin object that is initialised.
+  **/
 GPIO_Handler* GPIO_InitOutput(GPIO_Port port, GPIO_Pin pin,
                               GPO_OutType type, GPIO_Speed speed,
-                              GPIO_Signal value)
+                              GPIO_Signal state)
 {
     // Prepare object before initialisation.
     memset(&s_gpio[(u8)port][(u8)pin], 0x00, sizeof(GPIO_Handler));
     // Prepare value for output type.
     GPIO_TypeDef* l_gpio = sGPIO_EnablePort(port);
-    u32 l_mode  = 0xFFFFFFFF & ( 0xFFFFFFFD << ((u8)pin * 2)),
-        l_speed = 0xFFFFFFFF & ((0xFFFFFFFC | (u8)speed) << ((u8)pin * 2)),
-        l_type  = 0x0000FFFF & ((0x0000FFFE | (u8)type)  << (u8)pin);
     // Configure pin as output.
-    l_gpio->MODER &= l_mode;
+    l_gpio->MODER   =  l_gpio->MODER   & (0xFFFFFFFD << ((u8)pin * 2));
     // Configure output speed.
-    l_gpio->OSPEEDR &= l_speed;
+    l_gpio->OSPEEDR = (l_gpio->OSPEEDR & (0xFFFFFFFC << ((u8)pin * 2))) |
+                       ((u32)speed << ((u8)pin * 2));
     // Configure output type.
-    l_gpio->OTYPER &= l_type;
+    l_gpio->OTYPER  = (l_gpio->OTYPER  & (0x0000FFFE <<  (u8)pin)) |
+                       ((u32)type  << ((u8)pin * 2));
     // Set start value.
-    l_gpio->ODR |= (0x0000FFFF & value) << (u8)pin;
+    l_gpio->ODR = (l_gpio->ODR & (0x0000FFFE << (u8)pin)) | 
+                  ((u16)state << (u8)pin);
     // Prepare pin structure object.
     s_gpio[(u8)port][(u8)pin].m_pInstance = l_gpio;
     s_gpio[(u8)port][(u8)pin].m_port = port;
@@ -182,61 +215,118 @@ GPIO_Handler* GPIO_InitOutput(GPIO_Port port, GPIO_Pin pin,
     s_gpio[(u8)port][(u8)pin].m_type = GPIO_OUTPUT;
     s_gpio[(u8)port][(u8)pin].m_pullType = GPI_ISNT_IN_USE;
     s_gpio[(u8)port][(u8)pin].m_outType = type;
-    s_gpio[(u8)port][(u8)pin].m_state = value;
+    s_gpio[(u8)port][(u8)pin].m_state = (u8)state;
+    s_gpio[(u8)port][(u8)pin].m_isInitialised = 1;
     
     return &s_gpio[(u8)port][(u8)pin];
 }
 
-GPIO_Error GPIO_GetInput(GPIO_Handler* pHandler, u8* pState)
+/**
+  * @brief Read current input pin state.
+  * @param[i] port  - pin port.
+  * @param[i] pin   - pin number by order.
+  * @return 0x00 or 0x01     - current pin state;
+  *         GPIO_UNKNOWN_PIN - pin isn't initialised or pin isn't input typed.
+  **/
+u8 GPIO_GetInput(GPIO_Port port, GPIO_Pin pin)
 {
     // Check if input handler and input state pointer are empty.
-    if (!pHandler && !pState)
+    if (!s_gpio[(u8)port][(u8)pin].m_isInitialised ||
+         s_gpio[(u8)port][(u8)pin].m_type != GPIO_INPUT)
     {
-        return GPIO_NULL_ERROR;
+        return GPIO_UNKNOWN_PIN;
     }
     // Get input value.
-    *pState = 0;
-    if (pHandler->m_pInstance->IDR & (0x00000001 << pHandler->m_pin))
+    s_gpio[(u8)port][(u8)pin].m_state = 0x00;
+    if (s_gpio[(u8)port][(u8)pin].m_pInstance->IDR & (0x00000001 << pin))
     {
-        *pState = 1;
+        s_gpio[(u8)port][(u8)pin].m_state = 0x01;
     }
     
-    return GPIO_NOERROR;
+    return s_gpio[(u8)port][(u8)pin].m_state;
 }
 
-GPIO_Error GPIO_SetOutput(GPIO_Handler* pHandler, GPIO_Signal output)
+/**
+  * @brief Set current output signal level.
+  * @param[i] port   - pin port.
+  * @param[i] pin    - pin number by order.
+  * @param[i] output - preferred output signal level.  
+  * @return GPIO_NOERROR     - output level is changed successfully;
+  *         GPIO_UNKNOWN_PIN - pin isn't initialised or pin isn't output typed.
+  **/
+GPIO_Error GPIO_SetOutput(GPIO_Port port, GPIO_Pin pin, GPIO_Signal output)
 {
     // Check if output handler is empty.
-    if (!pHandler)
+    if (!s_gpio[(u8)port][(u8)pin].m_isInitialised ||
+         s_gpio[(u8)port][(u8)pin].m_type != GPIO_OUTPUT)
     {
-        return GPIO_NULL_ERROR;
-    }
-    // Check if handler is "output" typed.
-    if (pHandler->m_type != GPIO_OUTPUT)
-    {
-        return GPIO_ISNT_OUTPUT;
+        return GPIO_UNKNOWN_PIN;
     }
     // Set output signal level.
+    GPIO_TypeDef* l_pInstance = s_gpio[(u8)port][(u8)pin].m_pInstance;
+    s_gpio[(u8)port][(u8)pin].m_state = (u8)output;
     if (output == GPIO_SET)
     {
-        pHandler->m_pInstance->BSRR = 0x00000001 << pHandler->m_pin;    
+        l_pInstance->BSRR = (u32)output << (u8)pin;    
     }
     else
     {
-        pHandler->m_pInstance->BSRR = 0x00000001 << (pHandler->m_pin + 16);  
+        l_pInstance->BSRR = (u32)output << ((u8)pin + 16);  
     }
     
     return GPIO_NOERROR;
 }
 
-GPIO_Error GPIO_Deinit(GPIO_Handler* pHandler)
+/**
+  * @brief Toggle output signal level.
+  * @param[i] port   - pin port.
+  * @param[i] pin    - pin number by order.  
+  * @return GPIO_NOERROR     - output level is changed successfully;
+  *         GPIO_UNKNOWN_PIN - pin isn't initialised or pin isn't output typed.
+  **/
+GPIO_Error GPIO_ToggleOutput(GPIO_Port port, GPIO_Pin pin)
+{
+    // Check if output handler is empty.
+    if (!s_gpio[(u8)port][(u8)pin].m_isInitialised ||
+         s_gpio[(u8)port][(u8)pin].m_type != GPIO_OUTPUT)
+    {
+        return GPIO_UNKNOWN_PIN;
+    }
+    // Toggle output signal level.
+    GPIO_TypeDef* l_pInstance = s_gpio[(u8)port][(u8)pin].m_pInstance;
+    if (l_pInstance->ODR & (0x0001 << (u8)pin))
+    {
+        l_pInstance->BSRR = 0x00000001 << (u8)pin; 
+    }
+    else
+    {
+        l_pInstance->BSRR = 0x00000001 << ((u8)pin + 16); 
+    }
+    l_pInstance = 0;
+
+    return GPIO_NOERROR;
+}
+
+/**
+  * @brief Deinitialize input/output pin.
+  * @param[i] port   - pin port.
+  * @param[i] pin    - pin number by order.  
+  * @return GPIO_NOERROR   - pin is deinitialised successful;
+  *         GPIO_ISNT_INIT - pin isn't initialised yet.
+  **/
+GPIO_Error GPIO_Deinit(GPIO_Port port, GPIO_Pin pin)
 {
     // Check if input handler is empty.
-    if (!pHandler)
+    if (!s_gpio[(u8)port][(u8)pin].m_isInitialised)
     {
-        return GPIO_NULL_ERROR;
+        return GPIO_ISNT_INIT;
     }
-    // 
+    // Set pin into Analog mode, set the speed into lowest possible speed, and
+    // erase the pin object.
+    GPIO_TypeDef* l_pInstance = s_gpio[(u8)port][(u8)pin].m_pInstance;
+    l_pInstance->MODER = l_pInstance->MODER | ((u32)0x03 << ((u8)pin * 2));
+    l_pInstance->OSPEEDR = l_pInstance->OSPEEDR & (0xFFFFFFFC << ((u8)pin * 2));
+    memset(&s_gpio[(u8)port][(u8)pin], 0x00, sizeof(GPIO_Handler));
 
     return GPIO_NOERROR;
 }

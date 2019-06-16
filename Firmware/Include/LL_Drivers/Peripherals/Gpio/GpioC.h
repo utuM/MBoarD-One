@@ -1,3 +1,11 @@
+/**
+  * @filename Gpio.h
+  * @author   utuM
+  * @date     16.06.2019 (creation)
+  * @version  0.1.0
+  * @brief    
+  **/
+
 #ifndef __DRV_PERIPHERAL_GPIO_H__
 #define __DRV_PERIPHERAL_GPIO_H__
 
@@ -8,7 +16,7 @@
 extern "C" {
 #endif
 
-typedef unk(*GPIO_ExtIntCallback)(punk);
+typedef unk(*GPI_ExtIntCallback)(punk);
 
 #pragma pack(push, 1)
 
@@ -103,23 +111,12 @@ enm
 } GPIO_Speed;
 
 /**
-  * @brief GPIO external interrupt handler.
-  **/
-stc
-{
-    flg m_isInUse;                  ///< In use flag, could disable or enable
-                                    ///  external interrupt.
-    GPIO_ExtIntCallback m_callback; ///< Pointer to function drive the external
-                                    ///  interrupt.
-} GPIO_ExtInt;
-
-/**
   * @brief GPIO handler errors.
   **/
 enm
 {
     GPIO_NOERROR     = 0x00U,
-    GPIO_NULL_ERROR  = 0x01U,
+    GPIO_ISNT_INIT   = 0x01U,
     GPIO_UNKNOWN_PIN = 0x02U,
     GPIO_ISNT_OUTPUT = 0x03U
 } GPIO_Error;
@@ -129,6 +126,7 @@ enm
   **/
 stc
 {
+    u8 m_isInitialised;        ///< Complited initialisation flag.
     GPIO_TypeDef* m_pInstance; ///< Pointer to port instance.
     GPIO_Port m_port;          ///< GPIO port.
     GPIO_Pin m_pin;            ///< GPIO pin.
@@ -136,7 +134,6 @@ stc
     GPI_InPull m_pullType;     ///< Only for input pin: pull type.
     GPO_OutType m_outType;     ///< Only for output pin: type.
     u8 m_state;                ///< Current signal level (mostly for output).
-    GPIO_ExtInt m_ext;         ///< External interrupt manager.
 } GPIO_Handler;
 
 #pragma pack(pop)
@@ -144,11 +141,11 @@ stc
 GPIO_Handler* GPIO_InitInput(GPIO_Port port, GPIO_Pin pin, GPI_InPull pull,
                              GPIO_Speed speed);
 GPIO_Handler* GPIO_InitOutput(GPIO_Port port, GPIO_Pin pin, GPO_OutType type,
-                              GPIO_Speed speed, GPIO_Signal value);
-GPIO_Error GPIO_GetInput(GPIO_Handler* pHandler, u8* pState);
-GPIO_Error GPIO_SetOutput(GPIO_Handler* pHandler, GPIO_Signal value);
-GPIO_Error GPIO_ToggleOutput(GPIO_Handler* pHandler, GPIO_Signal value);
-GPIO_Error GPIO_Deinit(GPIO_Handler* pHandler);
+                              GPIO_Speed speed, GPIO_Signal state);
+u8 GPIO_GetInput(GPIO_Port port, GPIO_Pin pin);
+GPIO_Error GPIO_SetOutput(GPIO_Port port, GPIO_Pin pin, GPIO_Signal value);
+GPIO_Error GPIO_ToggleOutput(GPIO_Port port, GPIO_Pin pin);
+GPIO_Error GPIO_Deinit(GPIO_Port port, GPIO_Pin pin);
 
 #ifdef __cplusplus
 }
