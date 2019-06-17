@@ -2,8 +2,20 @@
   * @filename Gpio.h
   * @author   utuM
   * @date     16.06.2019 (creation)
-  * @version  0.1.0
-  * @brief    
+  * @version  0.9.0
+  * @brief    Low level (LL) general purpose input/output (GPIO) pins driver.
+  *           Provides control of MCU pins with input/output pin
+  *           initialisation posibilities, and could be used to
+  *           initialise pins with alternate functions for any communication
+  *           interface.
+  *           Input, output and alternate function pins could be enabled
+  *           with different functions. To initialise input pins used
+  *           'GPIO_InitInput(...)', for output - use 'GPIO_InitOutput(...)'.
+  *           Like an initialisation options, pull up/down, output type and
+  *           switching speed could be used as function input parameters.
+  *           Alternate function pin is not recommended to use separately
+  *           from any of the interfaces.
+  *           Current LL-library could be used for STM32H743xx MCU family.
   **/
 
 #ifndef __DRV_PERIPHERAL_GPIO_H__
@@ -15,8 +27,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef unk(*GPI_ExtIntCallback)(punk);
 
 #pragma pack(push, 1)
 
@@ -66,8 +76,9 @@ enm
   **/
 enm
 {
-    GPIO_INPUT  = 0x00U,
-    GPIO_OUTPUT = 0x01U
+    GPIO_INPUT    = 0x00U,
+    GPIO_OUTPUT   = 0x01U,
+    GPIO_ALT_FUNC = 0x02U
 } GPIO_Type;
 
 /**
@@ -75,8 +86,8 @@ enm
   **/
 enm
 {
-    GPIO_RESET = 0x00U,
-    GPIO_SET   = 0x01U
+    GPIO_RESET    = 0x00U,
+    GPIO_SET      = 0x01U
 } GPIO_Signal;
 
 /**
@@ -99,6 +110,29 @@ enm
     GPO_OPEN_DRAIN  = 0x01U,
     GPO_ISNT_IN_USE = 0x02U
 } GPO_OutType;
+
+/**
+  * @brief GPIO alternate functions values.
+  **/
+enm
+{
+    // Alternate for UART instances.
+    GPIO_LPUART_AF3 = 0x03U,
+    GPIO_UART1_AF4  = 0x04U,
+    GPIO_UART4_AF6  = 0x06U,
+    GPIO_UART1_AF7  = 0x07U,
+    GPIO_UART2_AF7  = 0x07U,
+    GPIO_UART3_AF7  = 0x07U,
+    GPIO_UART6_AF7  = 0x07U,
+    GPIO_UART7_AF7  = 0x07U,
+    GPIO_UART4_AF8  = 0x08U,
+    GPIO_UART5_AF8  = 0x08U,
+    GPIO_UART8_AF8  = 0x08U,
+    GPIO_LPUART_AF8 = 0x08U,
+    GPIO_UART7_AF11 = 0x0BU,
+    GPIO_UART5_AF14 = 0x0EU,
+    GPIO_NO_FUNC    = 0xFFU
+} GPIO_AltFunc;
 
 /**
   * @brief GPIO speed.
@@ -126,14 +160,15 @@ enm
   **/
 stc
 {
-    u8 m_isInitialised;        ///< Complited initialisation flag.
+    flg m_isInitialised;       ///< Complited initialisation flag.
     GPIO_TypeDef* m_pInstance; ///< Pointer to port instance.
     GPIO_Port m_port;          ///< GPIO port.
     GPIO_Pin m_pin;            ///< GPIO pin.
     GPIO_Type m_type;          ///< GPIO type: input or output.
     GPI_InPull m_pullType;     ///< Only for input pin: pull type.
     GPO_OutType m_outType;     ///< Only for output pin: type.
-    u8 m_state;                ///< Current signal level (mostly for output).
+    GPIO_AltFunc m_func;       ///< Alternate function for current pin.
+    GPIO_Signal m_state;       ///< Current signal level (mostly for output).
 } GPIO_Handler;
 
 #pragma pack(pop)
@@ -142,6 +177,8 @@ GPIO_Handler* GPIO_InitInput(GPIO_Port port, GPIO_Pin pin, GPI_InPull pull,
                              GPIO_Speed speed);
 GPIO_Handler* GPIO_InitOutput(GPIO_Port port, GPIO_Pin pin, GPO_OutType type,
                               GPIO_Speed speed, GPIO_Signal state);
+GPIO_Handler* GPIO_InitAltFunc(GPIO_Port port, GPIO_Pin pin, GPIO_AltFunc func,
+                               GPIO_Speed speed);
 u8 GPIO_GetInput(GPIO_Port port, GPIO_Pin pin);
 GPIO_Error GPIO_SetOutput(GPIO_Port port, GPIO_Pin pin, GPIO_Signal value);
 GPIO_Error GPIO_ToggleOutput(GPIO_Port port, GPIO_Pin pin);
