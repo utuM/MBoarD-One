@@ -29,4 +29,8 @@
 #define     penm      typedef enum*     
 #define     pstc     typedef struct*    
 
+#define     null            0
+#define     yes            true
+#define      no           false
+
 #endif // __CORE_TYPEDEFS_H__
