@@ -2,7 +2,7 @@
   * @filename Gpio.c
   * @author   utuM
   * @date     16.06.2019 (creation)
-  * @version  0.9.0
+  * @version  0.9.1
   * @brief    Low level (LL) general purpose input/output (GPIO) pins driver.
   *           Provides control of MCU pins with input/output pin
   *           initialisation posibilities, and could be used to
@@ -18,7 +18,7 @@
   *           Current LL-library could be used for STM32H743xx MCU family.
   **/
 
-#include "GpioC.h"
+#include "Gpio.h"
 
 #include <string.h>
 
@@ -37,9 +37,8 @@
 // Other definitions.
 #define TOTAL_GPIO_PORTS_AMOUNT   11
 #define TOTAL_PORT_PINS           16
-// Global static GPIOs array.
-static GPIO_Handler s_gpio[TOTAL_GPIO_PORTS_AMOUNT][TOTAL_PORT_PINS] = {null};
 
+static GPIO_Handler s_gpio[TOTAL_GPIO_PORTS_AMOUNT][TOTAL_PORT_PINS] = {null};
 static GPIO_TypeDef* sGPIO_EnablePort(GPIO_Port port);
 
 /**
@@ -188,7 +187,7 @@ GPIO_Handler* GPIO_InitInput(GPIO_Port port, GPIO_Pin pin,
     s_gpio[(u8)port][(u8)pin].m_pullType = pull;
     s_gpio[(u8)port][(u8)pin].m_outType = GPO_ISNT_IN_USE;
     s_gpio[(u8)port][(u8)pin].m_state = GPIO_RESET;
-    s_gpio[(u8)port][(u8)pin].m_func = GPIO_NO_FUNC;
+    s_gpio[(u8)port][(u8)pin].m_state = GPIO_NO_FUNC;
     s_gpio[(u8)port][(u8)pin].m_isInitialised = yes;
 
     return &s_gpio[(u8)port][(u8)pin];
@@ -229,8 +228,8 @@ GPIO_Handler* GPIO_InitOutput(GPIO_Port port, GPIO_Pin pin,
     s_gpio[(u8)port][(u8)pin].m_type = GPIO_OUTPUT;
     s_gpio[(u8)port][(u8)pin].m_pullType = GPI_ISNT_IN_USE;
     s_gpio[(u8)port][(u8)pin].m_outType = type;
-    s_gpio[(u8)port][(u8)pin].m_state = state;
-    s_gpio[(u8)port][(u8)pin].m_func = GPIO_NO_FUNC;
+    s_gpio[(u8)port][(u8)pin].m_state = (u8)state;
+    s_gpio[(u8)port][(u8)pin].m_state = GPIO_NO_FUNC;
     s_gpio[(u8)port][(u8)pin].m_isInitialised = yes;
     
     return &s_gpio[(u8)port][(u8)pin];
@@ -275,7 +274,7 @@ GPIO_Handler* GPIO_InitAltFunc(GPIO_Port port, GPIO_Pin pin, GPIO_AltFunc func,
     s_gpio[(u8)port][(u8)pin].m_type = GPIO_ALT_FUNC;
     s_gpio[(u8)port][(u8)pin].m_pullType = GPI_ISNT_IN_USE;
     s_gpio[(u8)port][(u8)pin].m_outType = GPO_ISNT_IN_USE;
-    s_gpio[(u8)port][(u8)pin].m_state = GPIO_RESET;
+    s_gpio[(u8)port][(u8)pin].m_state = (u8)GPIO_UNKNOWN;
     s_gpio[(u8)port][(u8)pin].m_func = func;
     s_gpio[(u8)port][(u8)pin].m_isInitialised = yes;
     
@@ -357,11 +356,11 @@ GPIO_Error GPIO_ToggleOutput(GPIO_Port port, GPIO_Pin pin)
     GPIO_TypeDef* l_pInstance = s_gpio[(u8)port][(u8)pin].m_pInstance;
     if (l_pInstance->ODR & (0x0001 << (u8)pin))
     {
-        l_pInstance->BSRR = 0x00000001 << (u8)pin; 
+        l_pInstance->BSRR = 0x00000001 << ((u8)pin + 16); 
     }
     else
     {
-        l_pInstance->BSRR = 0x00000001 << ((u8)pin + 16); 
+        l_pInstance->BSRR = 0x00000001 << (u8)pin; 
     }
     l_pInstance = 0;
 
@@ -382,7 +381,7 @@ GPIO_Error GPIO_Deinit(GPIO_Port port, GPIO_Pin pin)
     {
         return GPIO_ISNT_INIT;
     }
-    // Set pin into analog mode, set the speed into lowest possible speed, and
+    // Set pin into Analog mode, set the speed into lowest possible speed, and
     // erase the pin object.
     GPIO_TypeDef* l_pInstance = s_gpio[(u8)port][(u8)pin].m_pInstance;
     l_pInstance->MODER = l_pInstance->MODER | ((u32)0x03 << ((u8)pin * 2));

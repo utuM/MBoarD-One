@@ -2,7 +2,7 @@
   * @filename Gpio.h
   * @author   utuM
   * @date     16.06.2019 (creation)
-  * @version  0.9.0
+  * @version  0.9.1
   * @brief    Low level (LL) general purpose input/output (GPIO) pins driver.
   *           Provides control of MCU pins with input/output pin
   *           initialisation posibilities, and could be used to
@@ -87,7 +87,8 @@ enm
 enm
 {
     GPIO_RESET    = 0x00U,
-    GPIO_SET      = 0x01U
+    GPIO_SET      = 0x01U,
+    GPIO_UNKNOWN  = 0xFFU
 } GPIO_Signal;
 
 /**
@@ -168,7 +169,7 @@ stc
     GPI_InPull m_pullType;     ///< Only for input pin: pull type.
     GPO_OutType m_outType;     ///< Only for output pin: type.
     GPIO_AltFunc m_func;       ///< Alternate function for current pin.
-    GPIO_Signal m_state;       ///< Current signal level (mostly for output).
+    u8 m_state;                ///< Current signal level (mostly for output).
 } GPIO_Handler;
 
 #pragma pack(pop)
