@@ -18,6 +18,8 @@
 extern "C" {
 #endif
     
+#define DEFAULT_UART_RXBUF_SIZE 256
+      
 /**
   * @brief UART handlers could be used for communication.
   *        Useful for STM32H753xx series MCU.
@@ -53,40 +55,22 @@ enm
     UART4_TXA12_RXD0   = 0x16U,
     UART4_TXA12_RXC11  = 0x17U,
     UART4_TXA12_RXA11  = 0x18U,
-    UART4_TXA12_RXH14  = 0x19U,
-    UART4_TXA12_RXI9   = 0x1AU,
     UART4_TXC10_RXD0   = 0x1BU,
     UART4_TXC10_RXC11  = 0x1CU, 
     UART4_TXC10_RXA11  = 0x1DU,
-    UART4_TXC10_RXH14  = 0x1EU,
-    UART4_TXC10_RXI9   = 0x1FU,
     UART4_TXD1_RXD0    = 0x20U,
     UART4_TXD1_RXC11   = 0x21U,
     UART4_TXD1_RXA11   = 0x22U,
-    UART4_TXD1_RXH14   = 0x23U,
-    UART4_TXD1_RXI9    = 0x24U,
-    UART4_TXH13_RXD0   = 0x25U,
-    UART4_TXH13_RXC11  = 0x26U,
-    UART4_TXH13_RXA11  = 0x27U,
-    UART4_TXH13_RXH14  = 0x28U,
-    UART4_TXH13_RXI9   = 0x29U,
     // UART5 possible pin positions.
-    UART5_TXC12_RXB8   = 0x2AU,
+    UART5_TXC12_RXB12  = 0x2AU,
     UART5_TXC12_RXB5   = 0x2BU,
     UART5_TXC12_RXD2   = 0x2CU,
-    UART5_TXC12_RXD12  = 0x2DU,
-    UART5_TXB6_RXB8    = 0x2EU,
+    UART5_TXB6_RXB12   = 0x2EU,
     UART5_TXB6_RXB5    = 0x2FU,
     UART5_TXB6_RXD2    = 0x30U,
-    UART5_TXB6_RXD12   = 0x31U,
-    UART5_TXB9_RXB8    = 0x32U,
-    UART5_TXB9_RXB5    = 0x33U,
-    UART5_TXB9_RXD2    = 0x34U,
-    UART5_TXB9_RXD12   = 0x35U,
-    UART5_TXB13_RXB8   = 0x36U,
+    UART5_TXB13_RXB12  = 0x36U,
     UART5_TXB13_RXB5   = 0x37U,
     UART5_TXB13_RXD2   = 0x38U,
-    UART5_TXB13_RXD12  = 0x39U,
     // UART6 possible pin positions.
     UART6_TXG14_RXG9   = 0x3AU,
     UART6_TXG14_RXC7   = 0x3BU,
@@ -113,7 +97,7 @@ enm
     UART8_TXE1_RXE0    = 0x4EU,
     // Unknown UART handler.
     UART_UNKNOWN       = 0xFFU
-} UART_Instance;
+} UART_PinConfig;
     
 /**
   * @brief UART baudrates could be configured with for communication.
@@ -159,13 +143,16 @@ enm
   **/
 stc
 {
-    UART_Instance m_instance; ///< UART instance.
-    UART_BaudRate m_baudrate; ///< UART connection baudrate.
-    UART_State m_state;       ///< UART handler state.
-    flg m_isTxDmaInUse;       ///< UART DMA usage.
+    flg m_isInitialised;                    ///< Complited initialisation flag.
+    USART_TypeDef* m_pInstance;             ///< UART handler instance pointer.
+    UART_PinConfig m_config;                ///< UART pin configuration.
+    UART_BaudRate m_baudrate;               ///< UART connection baudrate.
+    UART_State m_state;                     ///< UART handler state.
+    u8 m_rxBuffer[DEFAULT_UART_RXBUF_SIZE]; ///< UART Rx-buffer.
+    flg m_isTxDmaInUse;                     ///< UART DMA usage.
 } UART_Handler;
 
-UART_Error UART_init(UART_Instance pinConfig, UART_BaudRate baud, 
+UART_Handler* UART_init(UART_PinConfig pinConfig, UART_BaudRate baud, 
                                                               flg isDmaEnabled);
 
 #ifdef __cplusplus
