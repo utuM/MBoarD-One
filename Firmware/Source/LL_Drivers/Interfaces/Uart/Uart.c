@@ -22,19 +22,110 @@
 // Total UART handlers amount.
 #define TOTAL_UART_AMOUNT 8
 
-UART_Handler s_uart[TOTAL_UART_AMOUNT] = {null};
+static UART_Handler s_uart[TOTAL_UART_AMOUNT] = {null};
+static u16 sUART_GetClockDivider(UART_PinConfig pinConfig,
+                                 USART_TypeDef* pInstance);
 
 /**
-  * @brief UART initialisation function.
-  * @param[i] pinConfig    - UART pin configuration.
-  * @param[i] baud         - UART baud rate.
-  * @param[i] isDmaEnabled - DMA enabling flag.
-  * @return
+  *
   **/
-UART_Handler* UART_init(UART_PinConfig pinConfig, UART_BaudRate baud, 
-                                                               flg isDmaEnabled)
+static u16 sUART_GetClockDivider(UART_PinConfig pinConfig,
+                                 USART_TypeDef* pInstance)
+{
+    u8 l_clockSource = 0x00;
+    u32 l_clockDivider = 0x00000000;
+    // Get the clock source for the UART handler.
+    switch (pinConfig) {
+        // UART1 and UART6 handlers clock source.
+        case UART1_TXB6_RXB7:  case UART1_TXB6_RXA10:  case UART1_TXB6_RXB15:
+        case UART1_TXA9_RXB7:  case UART1_TXA9_RXA10:  case UART1_TXA9_RXB15:
+        case UART1_TXB14_RXB7: case UART1_TXB14_RXA10: case UART1_TXB14_RXB15:
+        case UART6_TXG14_RXG9: case UART6_TXG14_RXC7:  case UART6_TXC6_RXG9:
+        case UART6_TxC6_RXC7:
+            l_clockSource = (0x07 & (RCC->D2CCIP2R >> 3));
+            // Assign 'l_clockSource' to 'UART_CLK_D2PCLK2' because according
+            // to ST 'Reference manual' , for UART1 and UART6 need to check
+            // CLK2 in Domain2.
+            if (l_clockSource == (u8)UART_CLK_D2PCLK1) {
+                l_clockSource = (u8)UART_CLK_D2PCLK2;
+            }
+            break;
+        // UART2, UART3, UART4, UART5, UART7 and UART8 handlers clock source.
+        case UART2_TXD5_RXD6:   case UART2_TXD5_RXA3:   case UART2_TXA2_RXD6:
+        case UART2_TXA2_RXA3:
+        case UART3_TXC10_RXC11: case UART3_TXC10_RXD9:  case UART3_TXC10_RXB11:
+        case UART3_TXD8_RXC11:  case UART3_TXD8_RXD9:   case UART3_TXD8_RXB11:
+        case UART3_TXB10_RXC11: case UART3_TXB10_RXD9:  case UART3_TXB10_RXB11:
+        case UART4_TXA12_RXD0:  case UART4_TXA12_RXC11: case UART4_TXA12_RXA11:
+        case UART4_TXC10_RXD0:  case UART4_TXC10_RXC11: case UART4_TXC10_RXA11:
+        case UART4_TXD1_RXD0:   case UART4_TXD1_RXC11:  case UART4_TXD1_RXA11:
+        case UART5_TXC12_RXB12: case UART5_TXC12_RXB5:  case UART5_TXC12_RXD2:
+        case UART5_TXB6_RXB12:  case UART5_TXB6_RXB5:   case UART5_TXB6_RXD2:
+        case UART5_TXB13_RXB12: case UART5_TXB13_RXB5:  case UART5_TXB13_RXD2:
+        case UART7_TXB4_RXB3:   case UART7_TXB4_RXA8:   case UART7_TXB4_RXE7:
+        case UART7_TXB4_RXF6:   case UART7_TXA15_RXB3:  case UART7_TXA15_RXA8:
+        case UART7_TXA15_RXE7:  case UART7_TXA15_RXF6:  case UART7_TXE8_RXB3:
+        case UART7_TXE8_RXA8:   case UART7_TXE8_RXE7:   case UART7_TXE8_RXF6:
+        case UART7_TXF7_RXB3:   case UART7_TXF7_RXA8:   case UART7_TXF7_RXE7:
+        case UART7_TXF7_RXF6:
+        case UART8_TXE1_RXE0:
+            l_clockSource = (0x07 & RCC->D2CCIP2R);
+            break;
+    }
+    // Divider calculation.
+    switch (l_clockSource) {
+        case UART_CLK_D2PCLK1:
+            l_clockDivider = 0;
+            break;
+            
+        case UART_CLK_D2PCLK2:
+            l_clockDivider = 0;
+            break;
+            
+        case UART_CLK_PLL2:
+            l_clockDivider = 0;
+            break;
+            
+        case UART_CLK_PLL3:
+            l_clockDivider = 0;
+            break;
+      
+        case UART_CLK_HSI:
+            l_clockDivider = 0;
+            break;
+            
+        case UART_CLK_CSI:
+            l_clockDivider = 0;
+            break;
+            
+        case UART_CLK_LSE:
+            l_clockDivider = 0;
+            break;
+            
+        case UART_CLK_UNDEF:
+            return 0;
+            break;
+    }
+    // UART divider storage according to calculated one.
+    if ((l_clockDivider >= 0x00000010U) &&
+        (l_clockDivider <= 0x0000FFFFU)) {
+        u16 l_regValue = (u16)(l_clockDivider & 0xFFF0U);
+        return (l_regValue |= (u16)((l_clockDivider & (u16)0x000FU) >> 1));
+        
+    }
+    
+    return 0;
+}
+
+/**
+  *
+  **/
+UART_Handler* UART_init(UART_PinConfig pinConfig, UART_Mode mode,  
+                        UART_BaudRate baud, UART_Divider divider,
+                        flg isDmaEnabled)
 {
     USART_TypeDef* l_pInstance = null;
+    u16 l_clockDivider = 0x00;
     u8 l_index;
     // Configure direct UART handler.
     switch (pinConfig) 
@@ -114,7 +205,7 @@ UART_Handler* UART_init(UART_PinConfig pinConfig, UART_BaudRate baud,
                     break;
             }
             l_index = 0;
-            l_pInstance = USART1;            
+            l_pInstance = USART1;
 #endif // (UART1_ENABLED == 0)
             break;
         // UART2 handler configuration.
@@ -587,6 +678,26 @@ UART_Handler* UART_init(UART_PinConfig pinConfig, UART_BaudRate baud,
     }
     // Prepare and configure 'UART_Handler' structure by input parameter values.
     memset(&s_uart[l_index], null, sizeof(UART_Handler));
-    
+    // Set 1st control register: word length is 8 bits, oversampling mode is 16,
+    // parity control is disabled, input work mode, disable UART during setting
+    // up.
+    l_pInstance->CR1 =
+             (s_uart[l_index].m_pInstance->CR1 & 0xEFFF69F2) | ((u32)mode << 2);
+    // Set 2nd control register: stop bit value.
+    l_pInstance->CR2 = (s_uart[l_index].m_pInstance->CR2 & 0xFFFFCFFF);
+    // Set 3rd control register: disable HW control.
+    l_pInstance->CR3 = (s_uart[l_index].m_pInstance->CR3 & 0xFFFFFCFF);
+    // Set prescaler value.
+    l_pInstance->PRESC =
+                (s_uart[l_index].m_pInstance->PRESC & 0xFFFFFFF0) | (u8)divider;
+    // Get clock source and calculate the divider.
+    l_clockDivider = sUART_GetClockDivider(pinConfig, l_pInstance);
+    if (!l_clockDivider) {
+        return null;
+    }
+    l_pInstance->BRR = l_clockDivider;
+    // Enable current UART handler.
+    l_pInstance->CR1 |= 0x00000001;
+
     return &s_uart[l_index];
 }

@@ -98,6 +98,13 @@ enm
     // Unknown UART handler.
     UART_UNKNOWN       = 0xFFU
 } UART_PinConfig;
+
+enm
+{
+    UART_RX_ONLY = 0x01U,
+    UART_TX_ONLY = 0x02U,
+    UART_RX_TX   = 0x03U
+} UART_Mode;
     
 /**
   * @brief UART baudrates could be configured with for communication.
@@ -118,6 +125,25 @@ enm
 } UART_BaudRate;
 
 /**
+  * @brief UART prescaler divider.
+  **/
+enm
+{
+    UART_PRESC_DIV1   = 0x00U, ///< Prescaler divider by 1.
+    UART_PRESC_DIV2   = 0x01U, ///< Prescaler divider by 2.
+    UART_PRESC_DIV4   = 0x02U, ///< Prescaler divider by 4.
+    UART_PRESC_DIV6   = 0x03U, ///< Prescaler divider by 6.
+    UART_PRESC_DIV8   = 0x04U, ///< Prescaler divider by 8.
+    UART_PRESC_DIV10  = 0x05U, ///< Prescaler divider by 10.
+    UART_PRESC_DIV12  = 0x06U, ///< Prescaler divider by 12.
+    UART_PRESC_DIV16  = 0x07U, ///< Prescaler divider by 16.
+    UART_PRESC_DIV32  = 0x08U, ///< Prescaler divider by 32.
+    UART_PRESC_DIV64  = 0x09U, ///< Prescaler divider by 64.
+    UART_PRESC_DIV128 = 0x0AU, ///< Prescaler divider by 128.
+    UART_PRESC_DIV256 = 0x0BU  ///< Prescaler divider by 256.
+} UART_Divider;
+
+/**
   * @brief UART handler state.
   **/
 enm
@@ -127,6 +153,22 @@ enm
                          ///  process. 
     UART_LOCK   = 0x02U  ///< UART handler is locked, busy by some process.
 } UART_State;
+
+/**
+  * @brief UART clock source.
+  **/
+enm
+{
+    UART_CLK_D2PCLK1 = 0x00U, ///< Domain2 PCLK1 for UART2, UART3, UART4, UART5,
+                              ///  UART7 and UART8.
+    UART_CLK_D2PCLK2 = 0x10U, ///< Domain2 PCLK2 for UART1 and UART6.
+    UART_CLK_PLL2    = 0x01U, ///< PLL2Q clock source.
+    UART_CLK_PLL3    = 0x02U, ///< PLL3Q clock source.
+    UART_CLK_HSI     = 0x03U, ///< HSI clock source.
+    UART_CLK_CSI     = 0x04U, ///< CSI clock source.
+    UART_CLK_LSE     = 0x05U, ///< LSE clock source.
+    UART_CLK_UNDEF   = 0xFFU  ///< Undefined clock source.
+} UART_ClockSource;
 
 /**
   * @brief UART return codes.
@@ -152,8 +194,9 @@ stc
     flg m_isTxDmaInUse;                     ///< UART DMA usage.
 } UART_Handler;
 
-UART_Handler* UART_init(UART_PinConfig pinConfig, UART_BaudRate baud, 
-                                                              flg isDmaEnabled);
+UART_Handler* UART_init(UART_PinConfig pinConfig, UART_Mode mode,
+                        UART_BaudRate baud, UART_Divider divider,
+                        flg isDmaEnabled);
 
 #ifdef __cplusplus
 }
