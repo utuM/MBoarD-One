@@ -20,6 +20,23 @@ extern "C" {
     
 #define DEFAULT_UART_RXBUF_SIZE 256
       
+#pragma pack(push, 1)
+  
+/**
+  * @brief UART handler index to get access to the handler object.
+  **/
+enm
+{
+    UART1_INDEX = 0x00U,
+    UART2_INDEX = 0x01U,
+    UART3_INDEX = 0x02U,
+    UART4_INDEX = 0x03U,
+    UART5_INDEX = 0x04U,
+    UART6_INDEX = 0x05U,
+    UART7_INDEX = 0x06U,
+    UART8_INDEX = 0x07U
+} UART_HandlerIndex;
+    
 /**
   * @brief UART handlers could be used for communication.
   *        Useful for STM32H753xx series MCU.
@@ -111,17 +128,17 @@ enm
   **/
 enm
 {
-    UART_1200BPS   = 1200L,   ///< 1200 bits per second.
-    UART_2400BPS   = 2400L,   ///< 2400 bits per second.
-    UART_4800BPS   = 4800L,   ///< 4800 bits per second.
-    UART_9600BPS   = 9600L,   ///< 9600 bits per second.
-    UART_19200BPS  = 19200L,  ///< 19200 bits per second.
-    UART_38400BPS  = 38400L,  ///< 38400 bits per second.
-    UART_57600BPS  = 57600L,  ///< 57600 bits per second.
-    UART_115200BPS = 115200L, ///< 115200 bits per second.
-    UART_230400BPS = 230400L, ///< 230400 bits per second.
-    UART_460800BPS = 460800L, ///< 460800 bits per second.
-    UART_921600BPS = 921600L  ///< 921600 bits per second.
+    UART_1200BPS   = 1200U,   ///< 1200 bits per second.
+    UART_2400BPS   = 2400U,   ///< 2400 bits per second.
+    UART_4800BPS   = 4800U,   ///< 4800 bits per second.
+    UART_9600BPS   = 9600U,   ///< 9600 bits per second.
+    UART_19200BPS  = 19200U,  ///< 19200 bits per second.
+    UART_38400BPS  = 38400U,  ///< 38400 bits per second.
+    UART_57600BPS  = 57600U,  ///< 57600 bits per second.
+    UART_115200BPS = 115200U, ///< 115200 bits per second.
+    UART_230400BPS = 230400U, ///< 230400 bits per second.
+    UART_460800BPS = 460800U, ///< 460800 bits per second.
+    UART_921600BPS = 921600U  ///< 921600 bits per second.
 } UART_BaudRate;
 
 /**
@@ -175,9 +192,11 @@ enm
   **/
 enm
 {
-    UART_NOERROR       = 0x00U,
-    UART_NULL_HANDLER  = 0x01U,
-    UART_EMPTY_HANDLER = 0x02U
+    UART_NOERROR        = 0x00U,
+    UART_ISNT_INIT      = 0x01U,
+    UART_INVALID_PARAMS = 0x02U,
+    UART_NULL_HANDLER   = 0x03U,
+    UART_EMPTY_HANDLER  = 0x04U
 } UART_Error;
 
 /**
@@ -194,9 +213,12 @@ stc
     flg m_isTxDmaInUse;                     ///< UART DMA usage.
 } UART_Handler;
 
-UART_Handler* UART_init(UART_PinConfig pinConfig, UART_Mode mode,
+#pragma pack(pop)
+
+UART_Handler* UART_Init(UART_PinConfig pinConfig, UART_Mode mode,
                         UART_BaudRate baud, UART_Divider divider,
                         flg isDmaEnabled);
+u16 UART_Send(UART_HandlerIndex index, u8* pData, u16 size);
 
 #ifdef __cplusplus
 }
